@@ -13,11 +13,13 @@
 ## 色
 
 - 画面は `bg` の黒一色。テーマは Terminal の 1 つだけで、ライトモードは持たない
+- 個別ページの記事だけは、黒い画面の中に `paper` 地のコンテナを置いて読ませる。端末の中に開いた文書の窓という見立て。トップには使わない
+- `paper` の上の文字は `ink`、補足は `ink-muted`、リンクは `ink-link`、罫線は `ink-line`。`phosphor` 系の色は `paper` の上で読めないので使わない
 - 文字、見出し、リンク、罫線の主役は `phosphor`。補足は `phosphor-muted`、枠線は `line`、装飾だけの罫線は `line-faint`
 - 反転表示や主ボタンは `phosphor` 地に `on-phosphor` 文字
 - `amber` は警告とエラー専用。緑の画面で唯一の別色なので、状態を表すときだけ使い、必ず文言を添える
 - `embed-bg` の白は外部埋め込みの下地だけ。自前の部品には白を使わない
-- グラデーションと影は使わない。面の差は `surface-raised` の一段だけ
+- グラデーションと影は使わない。面の差は `bg` の上では `surface-raised`、`paper` の上では `paper-raised` の一段だけ
 
 ## 文字
 
@@ -53,5 +55,6 @@
 - TextLink: 本文中のリンク
 - EmbedFrame: Google Forms の埋め込み枠
 - Button: 今後のフォーム用に足したボタン。既存サイトにはない
+- ArticleWindow: 個別ページの記事コンテナ。`phosphor` の 2px 枠と、`phosphor` 地のタイトルバーを持つ `paper` の面
 
 サイトでは部品を Tailwind のクラスで組む。実例は `packages/web/docs/index.html` と `packages/web/layouts/page.html`。デザインシステムの部品プレビューは `cm-` 接頭辞のクラスと `components/bundle.css` で描いているが、これはデザインシステム側だけのもの。

@@ -84,6 +84,7 @@ for (const p of pages) {
   await writeFile(
     join(dir, "index.html"),
     render(layout, {
+      id: p.slug,
       title: p.title,
       description: p.description ?? "",
       date: p.date ?? "",

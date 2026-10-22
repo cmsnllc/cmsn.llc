@@ -10,24 +10,26 @@
 
 @layer base {
   a:focus-visible { @apply outline-2 outline-offset-2 outline-phosphor; }
+  .prose-cm a:focus-visible { @apply outline-ink-link; }
 }
 
 @layer components {
   .prose-cm {
+    & :first-child { @apply mt-0; }
     & h2 { @apply mt-12 mb-4 text-2xl leading-snug font-bold; }
     & h3 { @apply mt-8 mb-2 text-lg leading-snug font-bold; }
     & :is(p, ul, ol, dl, table, pre, blockquote) { @apply mb-4; }
     & ul { @apply list-disc pl-6; }
     & ol { @apply list-decimal pl-6; }
-    & a { @apply underline; }
+    & a { @apply text-ink-link underline; }
     & img { @apply h-auto max-w-full; }
-    & hr { @apply my-8 border-t-2 border-line-faint; }
-    & code { @apply bg-surface-raised px-1 font-[inherit]; }
-    & pre { @apply overflow-x-auto bg-surface-raised p-4; }
+    & hr { @apply my-8 border-t-2 border-ink-line; }
+    & code { @apply bg-paper-raised px-1 font-[inherit]; }
+    & pre { @apply overflow-x-auto bg-paper-raised p-4; }
     & pre code { @apply p-0; }
-    & blockquote { @apply border-l-2 border-line pl-4 text-phosphor-muted; }
+    & blockquote { @apply border-l-2 border-ink-line pl-4 text-ink-muted; }
     & table { @apply block w-full overflow-x-auto border-collapse; }
-    & :is(th, td) { @apply border-2 border-line p-2 text-left; }
+    & :is(th, td) { @apply border-2 border-ink-line p-2 text-left; }
     & dt { @apply font-bold; }
     & dd { @apply mb-2; }
   }

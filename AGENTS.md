@@ -67,12 +67,13 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 
 最後に `![](/media/<key>)` が出るので本文に貼る。wrangler のログインが必要。同じ key で上書きしても edge キャッシュに最大 1 日残るので、差し替える時は key を変える。ロゴなど少数の固定アセットは従来どおり `packages/web/docs/` に置いてよい。
 
-レイアウトは `packages/web/layouts/page.html`。`{{ key }}` はエスケープして、`{{{ key }}}` は生のまま差し込む。使える key は `title`、`description`、`date`、`url`、`content`。
+レイアウトは `packages/web/layouts/page.html`。`{{ key }}` はエスケープして、`{{{ key }}}` は生のまま差し込む。使える key は `id`、`title`、`description`、`date`、`url`、`content`。
 
 ## スタイル
 
 - Tailwind CSS v4。スキャン対象は `docs/` と `layouts/` だけなので、クラスはこの2か所に書く。Markdown にクラスは書かない
 - 色、フォント、文字サイズは `packages/theme` のトークンを使う。`text-phosphor`、`bg-bg`、`font-display`、`text-wordmark` など。spacing / radius / border のトークンは Tailwind 既定と数字の意味がぶつかるので生成せず、対応は `guide.md` に書いてある
+- 個別ページは黒い画面の中に `paper` 地の記事コンテナを置く。トップとはテーマを分けてある。コンテナ内の色は `ink` 系のトークンを使い、`phosphor` 系は使わない
 - Markdown 本文の見た目は `src/styles.css` の `.prose-cm`
 - `index.html` は Tailwind 化前と見た目をピクセル単位で揃えてある。preflight の打ち消しで `font-[serif]`、`leading-[normal]`、`box-content`、`ml-10` などを付けているのはそのため。デザインを変える時に外す
 

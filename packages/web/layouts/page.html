@@ -16,9 +16,17 @@
     <a class="font-display text-2xl no-underline" href="/">CMSN</a>
   </header>
   <main class="mx-auto max-w-content px-4">
-    <h1 class="my-8 font-display text-[clamp(1.5rem,6vw,3rem)] leading-tight wrap-anywhere">{{ title }}</h1>
-    <article class="prose-cm">
+    <article class="border-2 border-phosphor bg-paper text-ink">
+      <div class="flex justify-between gap-4 bg-phosphor px-4 py-2 font-display text-label text-on-phosphor">
+        <span>P/{{ id }}</span>
+        <time datetime="{{ date }}">{{ date }}</time>
+      </div>
+      <div class="px-5 pt-8 pb-10 sm:px-10 sm:pt-12 sm:pb-14">
+        <h1 class="mb-8 text-[clamp(1.5rem,5vw,2rem)] leading-snug font-bold wrap-anywhere">{{ title }}</h1>
+        <div class="prose-cm">
 {{{ content }}}
+        </div>
+      </div>
     </article>
   </main>
   <footer class="mx-auto mt-20 max-w-content px-4 py-8 text-small text-phosphor-muted">
