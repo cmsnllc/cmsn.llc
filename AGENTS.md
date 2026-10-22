@@ -10,7 +10,7 @@
 
 pnpm workspaces のモノレポ。パッケージは `packages/web` と `packages/theme`。
 
-`packages/web` は静的サイトと Worker。`build.ts` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/<slug>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テストと lint はまだない。
+`packages/web` は静的サイトと Worker。`build.ts` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/p/<id>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テストと lint はまだない。
 
 ```
 package.json             ルート。packageManager で pnpm を固定、wrangler もここ
@@ -27,7 +27,7 @@ packages/web/
     index.html           トップページ。Tailwind のクラスで書く
     404.html             404 ページ
   pages/
-    *.md                 個別ページの原稿。ファイル名が URL になる
+    *.md                 個別ページの原稿。ファイル名が /p/<id>/ の id になる
     _template.md         雛形。_ 始まりはビルド対象外
   layouts/page.html      個別ページの共通レイアウト
   build.ts               ビルドスクリプト。sitemap.xml もここで生成
@@ -51,10 +51,10 @@ README.md                ページの追加手順
 
 ## 個別ページの追加
 
-1. `packages/web/pages/_template.md` をコピーして `packages/web/pages/<slug>.md` を作る。slug は英小文字、数字、ハイフンのみ
+1. `packages/web/pages/_template.md` をコピーして `packages/web/pages/<id>.md` を作る。id は連番で、既存の最大の番号に 1 を足す
 2. front matter の `title` は必須。`description`、`date`、`updated` は任意。`draft: true` でビルド対象外
 3. 本文は Markdown。生 HTML も書ける
-4. `pnpm build` か `pnpm dev` で確認。`/<slug>/` で公開される
+4. `pnpm build` か `pnpm dev` で確認。`/p/<id>/` で公開される
 
 ## 画像
 

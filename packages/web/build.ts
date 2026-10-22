@@ -45,7 +45,7 @@ async function loadPages(): Promise<Page[]> {
   const pages: Page[] = [];
   for (const file of files) {
     const slug = basename(file, ".md");
-    if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`${file}: ファイル名は英小文字・数字・ハイフンのみ`);
+    if (!/^[1-9][0-9]*$/.test(slug)) throw new Error(`${file}: ファイル名は連番の数字のみ`);
     const { data, body } = parseFrontMatter(await readFile(join(PAGES_DIR, file), "utf8"));
     if (data.draft === "true") continue;
     if (!data.title) throw new Error(`${file}: front matter に title がない`);
@@ -58,12 +58,12 @@ async function loadPages(): Promise<Page[]> {
       content: await marked.parse(body),
     });
   }
-  return pages.sort((a, b) => a.slug.localeCompare(b.slug));
+  return pages.sort((a, b) => a.slug.localeCompare(b.slug, "en", { numeric: true }));
 }
 
 function sitemap(pages: Page[], today: string): string {
   const urls = [{ loc: `${SITE}/`, lastmod: "2022-05-19" }].concat(
-    pages.map((p) => ({ loc: `${SITE}/${p.slug}/`, lastmod: p.updated || p.date || today })),
+    pages.map((p) => ({ loc: `${SITE}/p/${p.slug}/`, lastmod: p.updated || p.date || today })),
   );
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -79,7 +79,7 @@ await cp(STATIC_DIR, OUT_DIR, { recursive: true });
 const layout = await readFile("layouts/page.html", "utf8");
 const pages = await loadPages();
 for (const p of pages) {
-  const dir = join(OUT_DIR, p.slug);
+  const dir = join(OUT_DIR, "p", p.slug);
   await mkdir(dir, { recursive: true });
   await writeFile(
     join(dir, "index.html"),
@@ -87,7 +87,7 @@ for (const p of pages) {
       title: p.title,
       description: p.description ?? "",
       date: p.date ?? "",
-      url: `${SITE}/${p.slug}/`,
+      url: `${SITE}/p/${p.slug}/`,
       content: p.content,
     }),
   );
