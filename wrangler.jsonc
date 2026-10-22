@@ -1,16 +1,33 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cmsn-llc",
-  "main": "src/index.js",
+  "main": "packages/web/src/index.ts",
   "compatibility_date": "2026-10-01",
+  "build": {
+    "command": "pnpm build",
+    "watch_dir": ["packages/web/docs", "packages/web/pages", "packages/web/layouts", "packages/web/src/styles.css", "packages/web/build.ts", "packages/theme/tokens.json", "packages/theme/scripts"]
+  },
   "assets": {
-    "directory": "./docs",
+    "directory": "./packages/web/dist",
     "not_found_handling": "404-page",
     "binding": "ASSETS",
     "run_worker_first": true
   },
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "cmsn-llc-media"
+    }
+  ],
   "preview_urls": true,
-  "previews": {},
+  "previews": {
+    "r2_buckets": [
+      {
+        "binding": "MEDIA",
+        "bucket_name": "cmsn-llc-media"
+      }
+    ]
+  },
   "observability": {
     "enabled": true,
     "logs": {

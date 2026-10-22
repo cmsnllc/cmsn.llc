@@ -1,0 +1,17 @@
+{
+  "name": "@cmsn/theme",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./theme.css": "./dist/theme.css",
+    "./tokens.json": "./tokens.json"
+  },
+  "scripts": {
+    "build": "node scripts/gen.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.ts && tailwindcss -i ./src/styles.css -o ./dist/assets/site.css --minify",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
+    "upload": "node scripts/upload.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@tailwindcss/cli": "catalog:",
+    "@types/node": "catalog:",
+    "marked": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@cmsn/theme": "workspace:*"
+  }
+}
