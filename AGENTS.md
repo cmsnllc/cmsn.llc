@@ -2,6 +2,10 @@
 
 カミング・スーン合同会社 / Coming Soon LLC のコーポレートサイト https://cmsn.llc のリポジトリ。
 
+運用に要る情報はこのファイルにまとめる。README は最小限にとどめ、詳細を書き足さない。設計の経緯や判断理由、spec / plan は repo に commit せず、rill の `cmsn.llc` project に `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` / `docs/superpowers/plans/YYYY-MM-DD-<topic>.md` として置く。
+
+- 個別ページと画像配信、モノレポ構成の設計: `docs/superpowers/specs/2026-10-22-individual-pages-design.md`
+
 ## 構成
 
 pnpm workspaces のモノレポ。今あるパッケージは `packages/web` だけ。
