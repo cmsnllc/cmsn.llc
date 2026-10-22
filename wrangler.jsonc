@@ -20,7 +20,14 @@
     }
   ],
   "preview_urls": true,
-  "previews": {},
+  "previews": {
+    "r2_buckets": [
+      {
+        "binding": "MEDIA",
+        "bucket_name": "cmsn-llc-media"
+      }
+    ]
+  },
   "observability": {
     "enabled": true,
     "logs": {

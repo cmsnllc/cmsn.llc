@@ -48,7 +48,7 @@ npm run upload -- path/to/photo.jpg about/hero.jpg
 - 本番は Cloudflare Workers の static assets 配信。Worker 名 `cmsn-llc`。Netlify → Cloudflare Pages → Workers と移行してきた
 - 設定は `wrangler.jsonc`。`assets.directory` が `./dist`。`build.command` で `wrangler deploy`、`preview`、`dev` の前に `npm run build` が走る。依存のインストールは Workers Builds が自動でやる。`run_worker_first: true` で全リクエストが `src/index.js` を通り、`/media/*` は R2 binding `MEDIA` から、それ以外は `env.ASSETS.fetch()` でアセットを返す。ログとトレースを取るため。全リクエストが Worker リクエストとして課金対象になる
 - Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ。デプロイコマンドは `npx wrangler deploy`
-- `master` 以外のブランチは Worker Previews。`npx wrangler preview` でブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックが空でも必須
+- `master` 以外のブランチは Worker Previews。`npx wrangler preview` でブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックは必須で、Preview は本番設定を引き継がない。binding を足したら `previews` 側にも書く。`MEDIA` は Preview も本番と同じバケットを読む
 - 404 は `not_found_handling: "404-page"` で `docs/404.html` を返す。ステータスは 404
 - URL 末尾スラッシュや `.html` 省略の扱いは `html_handling` のデフォルト `auto-trailing-slash`。Pages と同じ挙動
 - `observability` で Workers Logs、Traces、Issues を全量サンプリングで有効化している
