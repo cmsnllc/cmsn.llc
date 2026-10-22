@@ -23,6 +23,7 @@ README.md       タイトルのみ
 - `master` 以外のブランチは `npx wrangler versions upload` でプレビュー URL が発行され、bot が PR にコメントする
 - 404 は `not_found_handling: "404-page"` で `docs/404.html` を返す。ステータスは 404
 - URL 末尾スラッシュや `.html` 省略の扱いは `html_handling` のデフォルト `auto-trailing-slash`。Pages と同じ挙動
+- `observability` で Workers Logs、Traces、Issues を全量サンプリングで有効化している。ただし Worker スクリプトがないので、アセット配信のリクエストは Worker を起動せず、ログやトレースにはほぼ何も出ない。アクセス状況は Cloudflare Web Analytics とゾーンの Analytics で見る
 
 ## ローカル確認
 
