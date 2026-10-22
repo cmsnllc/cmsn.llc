@@ -11,24 +11,26 @@ docs/
   index.html    トップページ。CSS は <style> にインライン
   404.html      404 ページ
   sitemap.xml   サイトマップ
+wrangler.jsonc  Cloudflare Workers の設定。docs/ を static assets として配信
 README.md       タイトルのみ
 ```
 
 ## デプロイ
 
-- 本番は Cloudflare Pages。プロジェクト名 `cmsn-llc`。Netlify からは移行済み
-- 出力ディレクトリ `docs/` は Cloudflare 側の設定。リポジトリ内に CF の設定ファイルはない
-- デフォルトブランチ `master` への push で本番デプロイ
-- PR ごとに `<branch>.cmsn-llc.pages.dev` へプレビューがデプロイされ、bot が PR にコメントする
-- 404 は Cloudflare Pages が出力ディレクトリ直下の `404.html` を自動で返す
+- 本番は Cloudflare Workers の static assets 配信。Worker 名 `cmsn-llc`。Netlify → Cloudflare Pages → Workers と移行してきた
+- 設定は `wrangler.jsonc`。`assets.directory` が `./docs`。Worker スクリプトはなく、アセットだけを返す
+- Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ。デプロイコマンドは `npx wrangler deploy`
+- `master` 以外のブランチは `npx wrangler versions upload` でプレビュー URL が発行され、bot が PR にコメントする
+- 404 は `not_found_handling: "404-page"` で `docs/404.html` を返す。ステータスは 404
+- URL 末尾スラッシュや `.html` 省略の扱いは `html_handling` のデフォルト `auto-trailing-slash`。Pages と同じ挙動
 
 ## ローカル確認
 
 ```sh
-python3 -m http.server -d docs 8000
+npx wrangler dev
 ```
 
-`http://localhost:8000` を開く。
+`http://localhost:8787` を開く。404 の挙動も本番と同じになる。wrangler なしで中身だけ見るなら `python3 -m http.server -d docs 8000` でもいい。
 
 ## 外部依存
 
