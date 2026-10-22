@@ -11,8 +11,7 @@ docs/
   index.html    トップページ。CSS は <style> にインライン
   404.html      404 ページ
   sitemap.xml   サイトマップ
-netlify.toml    旧 Netlify 設定。移行前の名残で現在は未使用
-README.md       旧 Netlify デプロイステータスバッジのみ
+README.md       タイトルのみ
 ```
 
 ## デプロイ
@@ -56,4 +55,3 @@ python3 -m http.server -d docs 8000
 - `index.html` に `<!doctype html>`、`<html>`、`<meta charset>`、viewport meta がない
 - `<h1>SN</h2>` の閉じタグが不一致
 - `404.html` は `<h1>404</h1>` だけでスタイルなし
-- `netlify.toml` と README の Netlify バッジが残っている
