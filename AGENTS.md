@@ -34,7 +34,7 @@ packages/web/
     +config.ts           全ページ共通の Vike 設定
     index.css            Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
     home/                トップページ /
-    article/             個別ページ /p/@id/ と /en/p/@id/。+route.ts で両方を受ける
+    article/             個別ページ /p/@id と /en/p/@id。+route.ts で両方を受ける
     _error/              404 と 500
   components/SiteFrame.tsx  個別ページと 404 の共通の枠
   public/                そのまま配信する静的ファイル。ロゴ画像など
@@ -57,7 +57,7 @@ README.md                最小限の説明
 1. `packages/web/content/_template.md` をコピーして `packages/web/content/<id>.<lang>.md` を作る。id は連番で、既存の最大の番号に 1 を足す。lang は `ja` か `en`。同じ記事の日英は同じ id にする
 2. front matter の `title` は必須。`description`、`date`、`updated` は任意。`draft: true` で公開しない
 3. 本文は Markdown。生 HTML も書ける
-4. `pnpm dev` で確認。日本語は `/p/<id>/`、英語は `/en/p/<id>/` で公開される。既定は日本語。片方の言語しかない記事はその言語でだけ出る。両方あれば hreflang の相互リンクとタイトルバーの言語切り替えが付く
+4. `pnpm dev` で確認。日本語は `/p/<id>`、英語は `/en/p/<id>` で公開される。既定は日本語。片方の言語しかない記事はその言語でだけ出る。両方あれば hreflang の相互リンクとタイトルバーの言語切り替えが付く
 
 原稿は `import.meta.glob` でビルド時に Worker に埋め込まれ、Markdown はリクエスト時に `marked` で HTML にする。
 
@@ -97,9 +97,9 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 - Workers Builds の設定は、ルートディレクトリ `packages/web`、ビルドコマンド `pnpm build`、デプロイコマンド `npx wrangler deploy`、ブランチのデプロイコマンド `npx wrangler preview`。依存のインストールは Workers Builds がリポジトリルートの `pnpm-lock.yaml` を見て pnpm でやる。`packages/web` の `build` は theme の生成から先にやる
 - Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ
 - `master` 以外のブランチは Worker Previews。ブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックは必須で、Preview は本番設定を引き継がない。binding を足したら `previews` 側にも書く。`MEDIA` は Preview も本番と同じバケットを読む
-- `run_worker_first: true` で全リクエストが Worker を通る。ログとトレースを取るため。`/media/*` と `/sitemap.xml` は Hono が返し、それ以外の拡張子付きのパスは `env.ASSETS` に渡す。Vike に回すと `trailingSlash` で末尾に `/` を足した URL へ 301 してしまうため。全リクエストが Worker リクエストとして課金対象になる
+- `run_worker_first: true` で全リクエストが Worker を通る。ログとトレースを取るため。`/media/*` と `/sitemap.xml` は Hono が返し、それ以外の拡張子付きのパスは `env.ASSETS` に渡す。全リクエストが Worker リクエストとして課金対象になる
 - 404 は Vike の `pages/_error` が返す。ステータスは 404
-- URL は末尾スラッシュ付きが正。Vike の `trailingSlash: true` で `/p/1` は `/p/1/` に 301 で寄せる
+- URL は末尾スラッシュ無しが正。Vike の既定で `/p/1/` は `/p/1` に 301 で寄せる
 - `observability` で Workers Logs、Traces、Issues を全量サンプリングで有効化している
 
 ## ローカル確認

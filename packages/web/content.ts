@@ -57,7 +57,7 @@ function load(): Article[] {
 export const articles = load();
 
 export const pathOf = (a: Pick<Article, "id" | "lang">): string =>
-  `${a.lang === DEFAULT_LANG ? "" : `/${a.lang}`}/p/${a.id}/`;
+  `${a.lang === DEFAULT_LANG ? "" : `/${a.lang}`}/p/${a.id}`;
 
 export const findArticle = (id: string, lang: Lang): Article | undefined =>
   articles.find((a) => a.id === id && a.lang === lang);

@@ -10,7 +10,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.route("/", media);
 app.route("/", sitemap);
 
-// 拡張子付きのパスは静的ファイルとして扱い、Vike に回さない。回すと trailingSlash で末尾に / を足した URL へ 301 してしまう
+// 拡張子付きのパスは静的ファイルとして ASSETS に渡す
 app.use("*", async (c, next) => {
   if (!c.env?.ASSETS || !/\.[a-z0-9]+$/i.test(c.req.path)) return next();
   return c.env.ASSETS.fetch(c.req.raw);
