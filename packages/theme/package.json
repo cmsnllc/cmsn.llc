@@ -3,6 +3,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./theme.css": "./src/theme.css"
+    "./theme.css": "./dist/theme.css",
+    "./tokens.json": "./tokens.json"
+  },
+  "scripts": {
+    "build": "node scripts/gen.js"
   }
 }

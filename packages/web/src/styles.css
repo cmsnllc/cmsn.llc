@@ -1,6 +1,10 @@
 @import "tailwindcss" source(none);
 @import "@cmsn/theme/theme.css";
 
+@theme {
+  --container-content: 44rem;
+}
+
 @source "../docs";
 @source "../layouts";
 

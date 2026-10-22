@@ -17,7 +17,9 @@ package.json             ルート。packageManager で pnpm を固定、wrangle
 pnpm-workspace.yaml      packages/* をワークスペースにする
 wrangler.jsonc           Cloudflare Workers の設定。パスは packages/web を指す
 packages/theme/
-  src/theme.css          design token。Tailwind の @theme。色、フォント、文字サイズ
+  tokens.json            design token の正。デザインシステム Artifact と同じ形式
+  guide.md               ブランドガイド。Artifact の README.md の正
+  scripts/gen.js         tokens.json から dist/theme.css (Tailwind の @theme) を生成
 packages/web/
   docs/
     index.html           トップページ。Tailwind のクラスで書く
@@ -59,9 +61,18 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 ## スタイル
 
 - Tailwind CSS v4。スキャン対象は `docs/` と `layouts/` だけなので、クラスはこの2か所に書く。Markdown にクラスは書かない
-- 色、フォント、文字サイズは `packages/theme/src/theme.css` のトークンを使う。`text-phosphor`、`bg-bg`、`font-display`、`text-wordmark` など。値はデザインシステム https://claude.ai/artifact/2RQNEJ6wiGAm2qgi7XTD8T の tokens.json と揃える
+- 色、フォント、文字サイズは `packages/theme` のトークンを使う。`text-phosphor`、`bg-bg`、`font-display`、`text-wordmark` など。spacing / radius / border のトークンは Tailwind 既定と数字の意味がぶつかるので生成せず、対応は `guide.md` に書いてある
 - Markdown 本文の見た目は `src/styles.css` の `.prose-cm`
 - `index.html` は Tailwind 化前と見た目をピクセル単位で揃えてある。preflight の打ち消しで `font-[serif]`、`leading-[normal]`、`box-content`、`ml-10` などを付けているのはそのため。デザインを変える時に外す
+
+## デザインシステム
+
+正は repo の `packages/theme`。デザインシステム Artifact https://claude.ai/artifact/2RQNEJ6wiGAm2qgi7XTD8T はそこから写す下流で、Artifact 側を直接直さない。
+
+- トークンを変える時は `packages/theme/tokens.json` を直す。`pnpm build` で `dist/theme.css` が再生成される
+- 文言や使い方のルールは `packages/theme/guide.md`
+- 変えたら Artifact に反映する。`tokens.json` を `project/tokens.json`、`guide.md` を `project/README.md` として Artifact に publish し、最後に `project/design-system.json` の `lastChange` を repo の commit で更新する。Claude に「デザインシステムを repo から同期して」と頼めばこの手順でやる
+- Artifact の部品プレビュー (`project/components/`) は Artifact 側だけのもの。サイトの部品は Tailwind のクラスで組む
 
 ## デプロイ
 

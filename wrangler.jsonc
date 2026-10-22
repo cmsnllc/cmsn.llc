@@ -5,7 +5,7 @@
   "compatibility_date": "2026-10-01",
   "build": {
     "command": "pnpm build",
-    "watch_dir": ["packages/web/docs", "packages/web/pages", "packages/web/layouts", "packages/web/src/styles.css", "packages/web/build.js", "packages/theme/src"]
+    "watch_dir": ["packages/web/docs", "packages/web/pages", "packages/web/layouts", "packages/web/src/styles.css", "packages/web/build.js", "packages/theme/tokens.json", "packages/theme/scripts"]
   },
   "assets": {
     "directory": "./packages/web/dist",

@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.20.0",
   "scripts": {
     "dev": "wrangler dev",
-    "build": "pnpm --filter web build",
+    "build": "pnpm -r build",
     "upload": "pnpm --filter web upload"
   },
   "devDependencies": {
