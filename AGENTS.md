@@ -10,7 +10,7 @@
 
 pnpm workspaces のモノレポ。パッケージは `packages/web` と `packages/theme`。
 
-`packages/web` は静的サイトと Worker。`build.ts` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/p/<id>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テストと lint はまだない。
+`packages/web` は静的サイトと Worker。`build.ts` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして、日本語は `dist/p/<id>/index.html`、英語は `dist/en/p/<id>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テストと lint はまだない。
 
 ```
 package.json             ルート。packageManager で pnpm を固定、wrangler もここ
@@ -27,7 +27,7 @@ packages/web/
     index.html           トップページ。Tailwind のクラスで書く
     404.html             404 ページ
   pages/
-    *.md                 個別ページの原稿。ファイル名が /p/<id>/ の id になる
+    <id>.<lang>.md       個別ページの原稿。lang は ja か en
     _template.md         雛形。_ 始まりはビルド対象外
   layouts/page.html      個別ページの共通レイアウト
   build.ts               ビルドスクリプト。sitemap.xml もここで生成
@@ -51,10 +51,10 @@ README.md                ページの追加手順
 
 ## 個別ページの追加
 
-1. `packages/web/pages/_template.md` をコピーして `packages/web/pages/<id>.md` を作る。id は連番で、既存の最大の番号に 1 を足す
+1. `packages/web/pages/_template.md` をコピーして `packages/web/pages/<id>.<lang>.md` を作る。id は連番で、既存の最大の番号に 1 を足す。lang は `ja` か `en`。同じ記事の日英は同じ id にする
 2. front matter の `title` は必須。`description`、`date`、`updated` は任意。`draft: true` でビルド対象外
 3. 本文は Markdown。生 HTML も書ける
-4. `pnpm build` か `pnpm dev` で確認。`/p/<id>/` で公開される
+4. `pnpm build` か `pnpm dev` で確認。日本語は `/p/<id>/`、英語は `/en/p/<id>/` で公開される。既定は日本語。片方の言語しかない記事はその言語でだけ出る。両方あれば hreflang の相互リンクとタイトルバーの言語切り替えが付く
 
 ## 画像
 
@@ -67,7 +67,7 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 
 最後に `![](/media/<key>)` が出るので本文に貼る。wrangler のログインが必要。同じ key で上書きしても edge キャッシュに最大 1 日残るので、差し替える時は key を変える。ロゴなど少数の固定アセットは従来どおり `packages/web/docs/` に置いてよい。
 
-レイアウトは `packages/web/layouts/page.html`。`{{ key }}` はエスケープして、`{{{ key }}}` は生のまま差し込む。使える key は `id`、`title`、`description`、`date`、`url`、`content`。
+レイアウトは `packages/web/layouts/page.html`。`{{ key }}` はエスケープして、`{{{ key }}}` は生のまま差し込む。使える key は `lang`、`id`、`title`、`description`、`date`、`url`、`alternates`、`langSwitch`、`content`。
 
 ## スタイル
 
