@@ -17,9 +17,11 @@ README.md       Netlify デプロイステータスバッジのみ
 
 ## デプロイ
 
-- Netlify でホスティング。サイト名 `cmsn`
-- `netlify.toml` に publish ディレクトリ指定はなく、Netlify 側の設定で `docs/` を配信している想定
-- デフォルトブランチへの push で自動デプロイされる
+- Netlify と Cloudflare Pages の両方が連携している。本番がどちらかはリポジトリからは判別できない
+  - Netlify: サイト名 `cmsn`。README のバッジ参照
+  - Cloudflare Pages: プロジェクト名 `cmsn-llc`。PR ごとに `<branch>.cmsn-llc.pages.dev` へプレビューがデプロイされ、bot が PR にコメントする
+- `netlify.toml` に publish ディレクトリ指定はなく、各サービス側の設定で `docs/` を配信している想定
+- デフォルトブランチは `master`。push で自動デプロイされる
 
 ## ローカル確認
 
