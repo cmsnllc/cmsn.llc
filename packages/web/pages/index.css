@@ -5,10 +5,11 @@
   --container-content: 44rem;
 }
 
-@source "../docs";
-@source "../layouts";
+@source "../pages";
+@source "../components";
 
 @layer base {
+  body { @apply bg-bg; }
   a:focus-visible { @apply outline-2 outline-offset-2 outline-phosphor; }
   .prose-cm a:focus-visible { @apply outline-ink-link; }
 }

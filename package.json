@@ -2,12 +2,9 @@
   "private": true,
   "packageManager": "pnpm@10.20.0",
   "scripts": {
-    "dev": "wrangler dev",
-    "build": "pnpm -r build",
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
     "typecheck": "pnpm -r typecheck",
     "upload": "pnpm --filter web upload"
-  },
-  "devDependencies": {
-    "wrangler": "catalog:"
   }
 }

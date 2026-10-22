@@ -58,4 +58,4 @@
 - Button: 今後のフォーム用に足したボタン。既存サイトにはない
 - ArticleWindow: 個別ページの記事コンテナ。`phosphor` の 2px 枠と、`phosphor` 地のタイトルバーを持つ `paper` の面
 
-サイトでは部品を Tailwind のクラスで組む。実例は `packages/web/docs/index.html` と `packages/web/layouts/page.html`。デザインシステムの部品プレビューは `cm-` 接頭辞のクラスと `components/bundle.css` で描いているが、これはデザインシステム側だけのもの。
+サイトでは部品を Tailwind のクラスで組む。実例は `packages/web/pages/home/+Page.tsx` と `packages/web/pages/article/+Page.tsx`。デザインシステムの部品プレビューは `cm-` 接頭辞のクラスと `components/bundle.css` で描いているが、これはデザインシステム側だけのもの。
