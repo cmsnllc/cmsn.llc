@@ -31,7 +31,9 @@
     & blockquote { @apply border-l-2 border-ink-line pl-4 text-ink-muted; }
     & table { @apply block w-full overflow-x-auto border-collapse; }
     & :is(th, td) { @apply border-2 border-ink-line p-2 text-left; }
+    & dl { @apply grid gap-x-8 sm:grid-cols-[10rem_1fr]; }
     & dt { @apply font-bold; }
-    & dd { @apply mb-2; }
+    & dd { @apply mb-4; }
+    & iframe { @apply block w-full border-2 border-ink-line bg-embed-bg; }
   }
 }

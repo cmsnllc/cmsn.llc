@@ -30,13 +30,16 @@ packages/web/
   content/
     <id>.<lang>.md       個別ページの原稿。lang は ja か en
     _template.md         雛形。_ 始まりは読み込まない
+    fixed/<slug>.<lang>.md  固定ページの原稿。slug は about、history、contact
   pages/
     +config.ts           全ページ共通の Vike 設定
     index.css            Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
-    home/                トップページ /
+    home/                トップページ /。ワードマークと固定ページへのナビだけ
     article/             個別ページ /p/@id と /en/p/@id。+route.ts で両方を受ける
+    fixed/               固定ページ /about、/history、/contact と /en 付き
     _error/              404 と 500
-  components/SiteFrame.tsx  個別ページと 404 の共通の枠
+  components/SiteFrame.tsx  個別ページ、固定ページ、404 の共通の枠。ヘッダに固定ページのナビ
+  components/Sheet.tsx      paper 地のコンテナ。個別ページと固定ページで共用
   public/                そのまま配信する静的ファイル。ロゴ画像など
   scripts/upload.ts      画像を R2 に上げるスクリプト
   dist/                  ビルド出力。git 管理外
@@ -60,6 +63,12 @@ README.md                最小限の説明
 4. `pnpm dev` で確認。日本語は `/p/<id>`、英語は `/en/p/<id>` で公開される。既定は日本語。片方の言語しかない記事はその言語でだけ出る。両方あれば hreflang の相互リンクとタイトルバーの言語切り替えが付く
 
 原稿は `import.meta.glob` でビルド時に Worker に埋め込まれ、Markdown はリクエスト時に `marked` で HTML にする。
+
+## 固定ページ
+
+会社概要 `/about`、沿革 `/history`、お問い合わせ `/contact` は `packages/web/content/fixed/<slug>.<lang>.md` に書く。英語は `/en/<slug>`。front matter は `title` が必須で、`description` と `updated` は任意。`title` はヘッダとトップのナビの文言にもなる。会社情報や沿革は `<dl>` で書くと `.prose-cm` で 2 列に並ぶ。
+
+固定ページを増やす時は `content.ts` の `FIXED_SLUGS` と `pages/fixed/+route.ts` の正規表現の両方に slug を足す。`+route.ts` は Vike の設定読み込み時にも動くので `content.ts` を import できない。
 
 ## 画像
 
