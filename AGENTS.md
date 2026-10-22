@@ -45,6 +45,7 @@ npx wrangler dev
 
 ## 編集時の注意
 
+- `<meta charset="utf-8">` は消さないこと。Workers の assets 配信は `Content-Type: text/html` に charset を付けないので、これがないと日本語が文字化けする
 - 会社情報 `<dl>` は日本語と英語を `/` 区切りで併記する形式を維持する
 - 配色は背景 `#000`、文字 `#00C400`
 - ページ追加や大きな更新時は `docs/sitemap.xml` の `<loc>` と `<lastmod>` も更新する
@@ -56,6 +57,6 @@ npx wrangler dev
 
 手を入れる時はついでに直すか、別 PR に分けるか判断する。
 
-- `index.html` に `<!doctype html>`、`<html>`、`<meta charset>`、viewport meta がない
+- `index.html` に `<!doctype html>`、`<html>`、viewport meta がない
 - `<h1>SN</h2>` の閉じタグが不一致
 - `404.html` は `<h1>404</h1>` だけでスタイルなし
