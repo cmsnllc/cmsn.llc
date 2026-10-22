@@ -14,7 +14,8 @@ pnpm workspaces のモノレポ。パッケージは `packages/web` と `package
 
 ```
 package.json             ルート。packageManager で pnpm を固定、wrangler もここ
-mise.toml                Node と pnpm の版
+mise.toml                pnpm の版と mise の設定
+.node-version            Node の版。mise と Workers Builds の両方が読む
 pnpm-workspace.yaml      packages/* をワークスペースにする
 wrangler.jsonc           Cloudflare Workers の設定。パスは packages/web を指す
 packages/theme/
@@ -43,8 +44,8 @@ README.md                ページの追加手順
 
 - コードは基本 TypeScript で書く。Worker は wrangler がバンドルし、ビルドやスクリプトは Node の型ストリップで `node xxx.ts` として直接動かす。tsc はトランスパイルに使わず型検査だけ
 - 型ストリップで動かすので enum、namespace、パラメータプロパティなど型を消すだけで済まない構文は使わない。`erasableSyntaxOnly` で弾かれる。相対 import には `.ts` 拡張子を付ける
-- Node と pnpm の版は `mise.toml` で管理する。`mise install` で揃う。pnpm の版は `package.json` の `packageManager` とも合わせる
-- Workers Builds は `mise.toml` を読まない。Node は既定の 24 系、pnpm は `packageManager` の版で動く。既定の Node のメジャーが上がったら Workers Builds の環境変数 `NODE_VERSION` で固定する
+- 版は mise で揃える。`mise install` で入る。Node は `.node-version`、pnpm は `mise.toml` に書く。Workers Builds は `mise.toml` も `package.json` の `engines` も読まず `.node-version` を読むので、Node の版はここが正。mise には `.node-version` を読む設定を入れてある
+- pnpm の版は `package.json` の `packageManager` とも合わせる。Workers Builds はこちらを使う
 - `pnpm typecheck` で全パッケージを検査する。`packages/web` は Worker 用の `tsconfig.json` とビルド用の `tsconfig.node.json` の 2 つ
 - 依存の版は `pnpm-workspace.yaml` の `catalog` で揃え、各 package.json は `catalog:` で参照する
 
