@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "node build.js",
-    "dev": "wrangler dev"
+    "dev": "wrangler dev",
+    "upload": "node scripts/upload.js"
   },
   "devDependencies": {
     "marked": "18.1.0"

@@ -14,4 +14,6 @@ date: 2026-10-22
 本文を Markdown で書く。
 ```
 
+画像は `npm run upload -- <file>` で R2 に上げて、出てきた `![](/media/...)` を本文に貼る。
+
 ローカル確認は `npm install` してから `npx wrangler dev`。詳細は [AGENTS.md](AGENTS.md)。
