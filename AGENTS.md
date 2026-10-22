@@ -97,7 +97,7 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 - Workers Builds の設定は、ルートディレクトリ `packages/web`、ビルドコマンド `pnpm build`、デプロイコマンド `npx wrangler deploy`、ブランチのデプロイコマンド `npx wrangler preview`。依存のインストールは Workers Builds がリポジトリルートの `pnpm-lock.yaml` を見て pnpm でやる。`packages/web` の `build` は theme の生成から先にやる
 - Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ
 - `master` 以外のブランチは Worker Previews。ブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックは必須で、Preview は本番設定を引き継がない。binding を足したら `previews` 側にも書く。`MEDIA` は Preview も本番と同じバケットを読む
-- `run_worker_first: true` で全リクエストが Worker を通る。ログとトレースを取るため。拡張子付きのパスはまず `env.ASSETS` を見て、なければ Hono と Vike に回す。全リクエストが Worker リクエストとして課金対象になる
+- `run_worker_first: true` で全リクエストが Worker を通る。ログとトレースを取るため。`/media/*` と `/sitemap.xml` は Hono が返し、それ以外の拡張子付きのパスは `env.ASSETS` に渡す。Vike に回すと `trailingSlash` で末尾に `/` を足した URL へ 301 してしまうため。全リクエストが Worker リクエストとして課金対象になる
 - 404 は Vike の `pages/_error` が返す。ステータスは 404
 - URL は末尾スラッシュ付きが正。Vike の `trailingSlash: true` で `/p/1` は `/p/1/` に 301 で寄せる
 - `observability` で Workers Logs、Traces、Issues を全量サンプリングで有効化している

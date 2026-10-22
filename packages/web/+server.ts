@@ -7,15 +7,14 @@ import { sitemap } from "./server/sitemap";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use("*", async (c, next) => {
-  if (!c.env?.ASSETS || !/\.[a-z0-9]+$/i.test(c.req.path) || c.req.path.startsWith("/media/")) return next();
-  const res = await c.env.ASSETS.fetch(c.req.raw);
-  if (res.status !== 404) return res;
-  return next();
-});
-
 app.route("/", media);
 app.route("/", sitemap);
+
+// 拡張子付きのパスは静的ファイルとして扱い、Vike に回さない。回すと trailingSlash で末尾に / を足した URL へ 301 してしまう
+app.use("*", async (c, next) => {
+  if (!c.env?.ASSETS || !/\.[a-z0-9]+$/i.test(c.req.path)) return next();
+  return c.env.ASSETS.fetch(c.req.raw);
+});
 
 vike(app);
 
