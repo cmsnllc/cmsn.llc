@@ -8,19 +8,20 @@
 
 ## 構成
 
-pnpm workspaces のモノレポ。今あるパッケージは `packages/web` だけ。
+pnpm workspaces のモノレポ。パッケージは `packages/web` と `packages/theme`。
 
-`packages/web` は静的サイトと Worker。`build.js` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/<slug>/index.html` に書き出す。依存は Markdown 変換の `marked` だけ。テスト、lint はない。
+`packages/web` は静的サイトと Worker。`build.js` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/<slug>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テスト、lint はない。
 
 ```
 package.json             ルート。packageManager で pnpm を固定、wrangler もここ
 pnpm-workspace.yaml      packages/* をワークスペースにする
 wrangler.jsonc           Cloudflare Workers の設定。パスは packages/web を指す
+packages/theme/
+  src/theme.css          design token。Tailwind の @theme。色、フォント、文字サイズ
 packages/web/
   docs/
-    index.html           トップページ。CSS は <style> にインライン
+    index.html           トップページ。Tailwind のクラスで書く
     404.html             404 ページ
-    assets/site.css      個別ページ共通の CSS。クラス接頭辞 cm-
   pages/
     *.md                 個別ページの原稿。ファイル名が URL になる
     _template.md         雛形。_ 始まりはビルド対象外
@@ -28,6 +29,7 @@ packages/web/
   build.js               ビルドスクリプト。sitemap.xml もここで生成
   dist/                  ビルド出力。git 管理外
   scripts/upload.js      画像を R2 に上げるスクリプト
+  src/styles.css         Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
   src/index.js           Worker スクリプト。/media/* は R2、それ以外は ASSETS に渡す
 README.md                ページの追加手順
 ```
@@ -53,6 +55,13 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 最後に `![](/media/<key>)` が出るので本文に貼る。wrangler のログインが必要。同じ key で上書きしても edge キャッシュに最大 1 日残るので、差し替える時は key を変える。ロゴなど少数の固定アセットは従来どおり `packages/web/docs/` に置いてよい。
 
 レイアウトは `packages/web/layouts/page.html`。`{{ key }}` はエスケープして、`{{{ key }}}` は生のまま差し込む。使える key は `title`、`description`、`date`、`url`、`content`。
+
+## スタイル
+
+- Tailwind CSS v4。スキャン対象は `docs/` と `layouts/` だけなので、クラスはこの2か所に書く。Markdown にクラスは書かない
+- 色、フォント、文字サイズは `packages/theme/src/theme.css` のトークンを使う。`text-phosphor`、`bg-bg`、`font-display`、`text-wordmark` など。値はデザインシステム https://claude.ai/artifact/2RQNEJ6wiGAm2qgi7XTD8T の tokens.json と揃える
+- Markdown 本文の見た目は `src/styles.css` の `.prose-cm`
+- `index.html` は Tailwind 化前と見た目をピクセル単位で揃えてある。preflight の打ち消しで `font-[serif]`、`leading-[normal]`、`box-content`、`ml-10` などを付けているのはそのため。デザインを変える時に外す
 
 ## デプロイ
 
@@ -86,7 +95,7 @@ pnpm dev
 
 - `<meta charset="utf-8">` は消さないこと。Workers の assets 配信は `Content-Type: text/html` に charset を付けないので、これがないと日本語が文字化けする
 - 会社情報 `<dl>` は日本語と英語を `/` 区切りで併記する形式を維持する
-- 配色は背景 `#000`、文字 `#00C400`
+- 配色は背景 `bg-bg`、文字 `text-phosphor`
 - `sitemap.xml` はビルドで生成する。トップの `<lastmod>` は `packages/web/build.js` に直書きなので、トップを大きく更新した時はそこを直す
 - 静的ファイルは `packages/web/docs/` 配下に置く。それ以外の場所に置いたものは配信されない
 - コードコメントは最小限
@@ -96,6 +105,5 @@ pnpm dev
 
 手を入れる時はついでに直すか、別 PR に分けるか判断する。
 
-- `index.html` に `<!doctype html>`、`<html>`、viewport meta がない
-- `<h1>SN</h2>` の閉じタグが不一致
+- `index.html` に viewport meta がない。足すとスマホで 20rem のワードマークがはみ出すので、デザインの見直しと一緒にやる
 - `404.html` は `<h1>404</h1>` だけでスタイルなし

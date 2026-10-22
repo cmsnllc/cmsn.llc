@@ -11,18 +11,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=M+PLUS+1+Code:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body class="cm-page">
-  <header class="cm-header">
-    <a class="cm-wordmark" href="/">CMSN</a>
+<body class="bg-bg font-body text-body text-phosphor selection:bg-phosphor selection:text-on-phosphor">
+  <header class="mx-auto max-w-content px-4 py-8">
+    <a class="font-display text-2xl no-underline" href="/">CMSN</a>
   </header>
-  <main class="cm-main">
-    <h1 class="cm-title">{{ title }}</h1>
-    <article class="cm-prose">
+  <main class="mx-auto max-w-content px-4">
+    <h1 class="my-8 font-display text-[clamp(1.5rem,6vw,3rem)] leading-tight wrap-anywhere">{{ title }}</h1>
+    <article class="prose-cm">
 {{{ content }}}
     </article>
   </main>
-  <footer class="cm-footer">
-    <a href="/">カミング・スーン合同会社 / Coming Soon LLC</a>
+  <footer class="mx-auto mt-20 max-w-content px-4 py-8 text-small text-phosphor-muted">
+    <div class="border-t-2 border-line-faint pt-8">
+      <a class="underline" href="/">カミング・スーン合同会社 / Coming Soon LLC</a>
+    </div>
   </footer>
 </body>
 </html>
