@@ -20,7 +20,7 @@ README.md       タイトルのみ
 - 本番は Cloudflare Workers の static assets 配信。Worker 名 `cmsn-llc`。Netlify → Cloudflare Pages → Workers と移行してきた
 - 設定は `wrangler.jsonc`。`assets.directory` が `./docs`。Worker スクリプトはなく、アセットだけを返す
 - Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ。デプロイコマンドは `npx wrangler deploy`
-- `master` 以外のブランチは `npx wrangler versions upload` でプレビュー URL が発行され、bot が PR にコメントする
+- `master` 以外のブランチは Worker Previews。`npx wrangler preview` でブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックが空でも必須
 - 404 は `not_found_handling: "404-page"` で `docs/404.html` を返す。ステータスは 404
 - URL 末尾スラッシュや `.html` 省略の扱いは `html_handling` のデフォルト `auto-trailing-slash`。Pages と同じ挙動
 - `observability` で Workers Logs、Traces、Issues を全量サンプリングで有効化している。ただし Worker スクリプトがないので、アセット配信のリクエストは Worker を起動せず、ログやトレースにはほぼ何も出ない。アクセス状況は Cloudflare Web Analytics とゾーンの Analytics で見る

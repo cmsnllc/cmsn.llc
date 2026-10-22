@@ -6,6 +6,8 @@
     "directory": "./docs",
     "not_found_handling": "404-page"
   },
+  "preview_urls": true,
+  "previews": {},
   "observability": {
     "enabled": true,
     "logs": {
