@@ -7,13 +7,24 @@ const STATIC_DIR = "docs";
 const PAGES_DIR = "pages";
 const OUT_DIR = "dist";
 
-const escapeHtml = (s) =>
-  String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+type FrontMatter = Record<string, string>;
 
-function parseFrontMatter(src) {
+interface Page {
+  slug: string;
+  title: string;
+  description?: string;
+  date?: string;
+  updated?: string;
+  content: string;
+}
+
+const HTML_ESCAPES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const escapeHtml = (s: string): string => s.replace(/[&<>"']/g, (c) => HTML_ESCAPES[c]);
+
+function parseFrontMatter(src: string): { data: FrontMatter; body: string } {
   const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!m) return { data: {}, body: src };
-  const data = {};
+  const data: FrontMatter = {};
   for (const line of m[1].split(/\r?\n/)) {
     const kv = line.match(/^([A-Za-z_][\w-]*)\s*:\s*(.*)$/);
     if (kv) data[kv[1]] = kv[2].replace(/^(["'])(.*)\1$/, "$2");
@@ -21,27 +32,36 @@ function parseFrontMatter(src) {
   return { data, body: src.slice(m[0].length) };
 }
 
-function render(layout, vars) {
-  return layout.replace(/\{\{\s*(\{?)\s*(\w+)\s*\}?\s*\}\}/g, (_, raw, key) =>
+function render(layout: string, vars: Record<string, string>): string {
+  return layout.replace(/\{\{\s*(\{?)\s*(\w+)\s*\}?\s*\}\}/g, (_, raw: string, key: string) =>
     raw ? (vars[key] ?? "") : escapeHtml(vars[key] ?? ""),
   );
 }
 
-async function loadPages() {
-  const files = (await readdir(PAGES_DIR).catch(() => [])).filter((f) => f.endsWith(".md") && !f.startsWith("_"));
-  const pages = [];
+async function loadPages(): Promise<Page[]> {
+  const files = (await readdir(PAGES_DIR).catch(() => [] as string[])).filter(
+    (f) => f.endsWith(".md") && !f.startsWith("_"),
+  );
+  const pages: Page[] = [];
   for (const file of files) {
     const slug = basename(file, ".md");
     if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`${file}: ファイル名は英小文字・数字・ハイフンのみ`);
     const { data, body } = parseFrontMatter(await readFile(join(PAGES_DIR, file), "utf8"));
     if (data.draft === "true") continue;
     if (!data.title) throw new Error(`${file}: front matter に title がない`);
-    pages.push({ slug, ...data, content: marked.parse(body) });
+    pages.push({
+      slug,
+      title: data.title,
+      description: data.description,
+      date: data.date,
+      updated: data.updated,
+      content: await marked.parse(body),
+    });
   }
   return pages.sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-function sitemap(pages, today) {
+function sitemap(pages: Page[], today: string): string {
   const urls = [{ loc: `${SITE}/`, lastmod: "2022-05-19" }].concat(
     pages.map((p) => ({ loc: `${SITE}/${p.slug}/`, lastmod: p.updated || p.date || today })),
   );
@@ -65,8 +85,8 @@ for (const p of pages) {
     join(dir, "index.html"),
     render(layout, {
       title: p.title,
-      description: p.description || "",
-      date: p.date || "",
+      description: p.description ?? "",
+      date: p.date ?? "",
       url: `${SITE}/${p.slug}/`,
       content: p.content,
     }),

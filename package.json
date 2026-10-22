@@ -4,9 +4,10 @@
   "scripts": {
     "dev": "wrangler dev",
     "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
     "upload": "pnpm --filter web upload"
   },
   "devDependencies": {
-    "wrangler": "4.151.1"
+    "wrangler": "catalog:"
   }
 }

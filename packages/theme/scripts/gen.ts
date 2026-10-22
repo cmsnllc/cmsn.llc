@@ -1,13 +1,32 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
-const tokens = JSON.parse(await readFile(new URL("../tokens.json", import.meta.url), "utf8"));
+type ThemedValue = string | Record<string, string>;
+
+interface Tokens {
+  color: { themes: { id: string }[]; tokens: { name: string; value: ThemedValue }[] };
+  type: {
+    families: Record<string, string>;
+    groups: {
+      styles: {
+        name: string;
+        fontSize: string;
+        lineHeight?: number | string;
+        letterSpacing?: string;
+        fontWeight?: number | string;
+      }[];
+    }[];
+  };
+}
+
+const tokens: Tokens = JSON.parse(await readFile(new URL("../tokens.json", import.meta.url), "utf8"));
 const firstTheme = tokens.color.themes[0].id;
 
-const rem = (v) => (typeof v === "string" && v.endsWith("px") ? `${parseFloat(v) / 16}rem` : v);
-const colorValue = (v) => (typeof v === "string" ? v : v[firstTheme]);
+const rem = (v: number | string): number | string =>
+  typeof v === "string" && v.endsWith("px") ? `${parseFloat(v) / 16}rem` : v;
+const colorValue = (v: ThemedValue): string => (typeof v === "string" ? v : v[firstTheme]);
 
-const lines = [];
-const section = (title) => lines.push("", `  /* ${title} */`);
+const lines: string[] = [];
+const section = (title: string) => lines.push("", `  /* ${title} */`);
 
 section("color");
 for (const t of tokens.color.tokens) lines.push(`  --color-${t.name}: ${colorValue(t.value)};`);

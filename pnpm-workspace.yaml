@@ -1,5 +1,14 @@
 packages:
   - packages/*
 
+catalog:
+  "@cloudflare/workers-types": 4.20260702.1
+  "@tailwindcss/cli": 4.3.3
+  "@types/node": 24.19.1
+  marked: 18.1.0
+  tailwindcss: 4.3.3
+  typescript: 5.9.3
+  wrangler: 4.151.1
+
 onlyBuiltDependencies:
   - workerd

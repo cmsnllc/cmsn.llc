@@ -10,7 +10,7 @@
 
 pnpm workspaces のモノレポ。パッケージは `packages/web` と `packages/theme`。
 
-`packages/web` は静的サイトと Worker。`build.js` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/<slug>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テスト、lint はない。
+`packages/web` は静的サイトと Worker。`build.ts` が `docs/` をそのまま `dist/` にコピーし、`pages/*.md` を共通レイアウトで HTML にして `dist/<slug>/index.html` に書き出す。続けて Tailwind CSS v4 の CLI が `src/styles.css` から `dist/assets/site.css` を生成する。テストと lint はまだない。
 
 ```
 package.json             ルート。packageManager で pnpm を固定、wrangler もここ
@@ -19,7 +19,7 @@ wrangler.jsonc           Cloudflare Workers の設定。パスは packages/web �
 packages/theme/
   tokens.json            design token の正。デザインシステム Artifact と同じ形式
   guide.md               ブランドガイド。Artifact の README.md の正
-  scripts/gen.js         tokens.json から dist/theme.css (Tailwind の @theme) を生成
+  scripts/gen.ts         tokens.json から dist/theme.css (Tailwind の @theme) を生成
 packages/web/
   docs/
     index.html           トップページ。Tailwind のクラスで書く
@@ -28,15 +28,23 @@ packages/web/
     *.md                 個別ページの原稿。ファイル名が URL になる
     _template.md         雛形。_ 始まりはビルド対象外
   layouts/page.html      個別ページの共通レイアウト
-  build.js               ビルドスクリプト。sitemap.xml もここで生成
+  build.ts               ビルドスクリプト。sitemap.xml もここで生成
   dist/                  ビルド出力。git 管理外
-  scripts/upload.js      画像を R2 に上げるスクリプト
+  scripts/upload.ts      画像を R2 に上げるスクリプト
   src/styles.css         Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
-  src/index.js           Worker スクリプト。/media/* は R2、それ以外は ASSETS に渡す
+  src/index.ts           Worker スクリプト。/media/* は R2、それ以外は ASSETS に渡す
 README.md                ページの追加手順
 ```
 
 `wrangler.jsonc` をルートに置いているのは、Workers Builds のルートディレクトリ設定を変えずに済ませるため。Worker を増やす時は各パッケージに `wrangler.jsonc` を置き、Workers Builds 側でルートディレクトリを分ける。
+
+## TypeScript
+
+- コードは基本 TypeScript で書く。Worker は wrangler がバンドルし、ビルドやスクリプトは Node の型ストリップで `node xxx.ts` として直接動かす。tsc はトランスパイルに使わず型検査だけ
+- 型ストリップで動かすので enum、namespace、パラメータプロパティなど型を消すだけで済まない構文は使わない。`erasableSyntaxOnly` で弾かれる。相対 import には `.ts` 拡張子を付ける
+- Node は `.node-version` で 24。Workers Builds もこれを読む
+- `pnpm typecheck` で全パッケージを検査する。`packages/web` は Worker 用の `tsconfig.json` とビルド用の `tsconfig.node.json` の 2 つ
+- 依存の版は `pnpm-workspace.yaml` の `catalog` で揃え、各 package.json は `catalog:` で参照する
 
 ## 個別ページの追加
 
@@ -77,7 +85,7 @@ pnpm upload path/to/photo.jpg about/hero.jpg
 ## デプロイ
 
 - 本番は Cloudflare Workers の static assets 配信。Worker 名 `cmsn-llc`。Netlify → Cloudflare Pages → Workers と移行してきた
-- 設定は `wrangler.jsonc`。`assets.directory` が `./packages/web/dist`。`build.command` で `wrangler deploy`、`preview`、`dev` の前に `pnpm build` が走る。依存のインストールは Workers Builds が `pnpm-lock.yaml` を見て pnpm で自動でやり、wrangler もルートの devDependencies の版が使われる。`run_worker_first: true` で全リクエストが `packages/web/src/index.js` を通り、`/media/*` は R2 binding `MEDIA` から、それ以外は `env.ASSETS.fetch()` でアセットを返す。ログとトレースを取るため。全リクエストが Worker リクエストとして課金対象になる
+- 設定は `wrangler.jsonc`。`assets.directory` が `./packages/web/dist`。`build.command` で `wrangler deploy`、`preview`、`dev` の前に `pnpm build` が走る。依存のインストールは Workers Builds が `pnpm-lock.yaml` を見て pnpm で自動でやり、wrangler もルートの devDependencies の版が使われる。`run_worker_first: true` で全リクエストが `packages/web/src/index.ts` を通り、`/media/*` は R2 binding `MEDIA` から、それ以外は `env.ASSETS.fetch()` でアセットを返す。ログとトレースを取るため。全リクエストが Worker リクエストとして課金対象になる
 - Workers Builds の Git 連携で、デフォルトブランチ `master` への push が本番デプロイ。デプロイコマンドは `npx wrangler deploy`
 - `master` 以外のブランチは Worker Previews。`npx wrangler preview` でブランチごとのプレビュー URL が発行され、Workers Builds のチェックとして PR に出る。`wrangler.jsonc` の `previews` ブロックは必須で、Preview は本番設定を引き継がない。binding を足したら `previews` 側にも書く。`MEDIA` は Preview も本番と同じバケットを読む
 - 404 は `not_found_handling: "404-page"` で `packages/web/docs/404.html` を返す。ステータスは 404
@@ -107,7 +115,7 @@ pnpm dev
 - `<meta charset="utf-8">` は消さないこと。Workers の assets 配信は `Content-Type: text/html` に charset を付けないので、これがないと日本語が文字化けする
 - 会社情報 `<dl>` は日本語と英語を `/` 区切りで併記する形式を維持する
 - 配色は背景 `bg-bg`、文字 `text-phosphor`
-- `sitemap.xml` はビルドで生成する。トップの `<lastmod>` は `packages/web/build.js` に直書きなので、トップを大きく更新した時はそこを直す
+- `sitemap.xml` はビルドで生成する。トップの `<lastmod>` は `packages/web/build.ts` に直書きなので、トップを大きく更新した時はそこを直す
 - 静的ファイルは `packages/web/docs/` 配下に置く。それ以外の場所に置いたものは配信されない
 - コードコメントは最小限
 - UI 文言に括弧書きは極力使わない

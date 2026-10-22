@@ -3,7 +3,7 @@ import { basename, extname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 
 const BUCKET = "cmsn-llc-media";
-const TYPES = {
+const TYPES: Record<string, string> = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
@@ -15,21 +15,19 @@ const TYPES = {
   ".mp4": "video/mp4",
 };
 
-const [arg, key = basename(arg ?? "")] = process.argv.slice(2);
-const file = arg && resolve(process.env.INIT_CWD ?? process.cwd(), arg);
-if (!file || !existsSync(file)) {
-  console.error("usage: pnpm upload <file> [key]");
+function fail(message: string): never {
+  console.error(message);
   process.exit(1);
 }
-if (!/^[A-Za-z0-9][A-Za-z0-9._\/-]*$/.test(key)) {
-  console.error(`key は英数字と . _ / - のみ: ${key}`);
-  process.exit(1);
-}
+
+const [arg, keyArg] = process.argv.slice(2);
+if (!arg) fail("usage: pnpm upload <file> [key]");
+const file = resolve(process.env.INIT_CWD ?? process.cwd(), arg);
+if (!existsSync(file)) fail(`ファイルがない: ${file}`);
+const key = keyArg ?? basename(arg);
+if (!/^[A-Za-z0-9][A-Za-z0-9._\/-]*$/.test(key)) fail(`key は英数字と . _ / - のみ: ${key}`);
 const type = TYPES[extname(key).toLowerCase()];
-if (!type) {
-  console.error(`未対応の拡張子: ${extname(key)}`);
-  process.exit(1);
-}
+if (!type) fail(`未対応の拡張子: ${extname(key)}`);
 
 try {
   execFileSync(
@@ -38,6 +36,6 @@ try {
     { stdio: "inherit" },
   );
 } catch (e) {
-  process.exit(e.status ?? 1);
+  process.exit((e as { status?: number }).status ?? 1);
 }
 console.log(`\n![](/media/${key})`);
