@@ -9,8 +9,13 @@ const OUT_DIR = "dist";
 
 type FrontMatter = Record<string, string>;
 
+const LANGS = ["ja", "en"] as const;
+type Lang = (typeof LANGS)[number];
+const DEFAULT_LANG: Lang = "ja";
+
 interface Page {
-  slug: string;
+  id: string;
+  lang: Lang;
   title: string;
   description?: string;
   date?: string;
@@ -38,19 +43,24 @@ function render(layout: string, vars: Record<string, string>): string {
   );
 }
 
+const pathOf = (p: Pick<Page, "id" | "lang">): string =>
+  `${p.lang === DEFAULT_LANG ? "" : `/${p.lang}`}/p/${p.id}/`;
+
 async function loadPages(): Promise<Page[]> {
   const files = (await readdir(PAGES_DIR).catch(() => [] as string[])).filter(
     (f) => f.endsWith(".md") && !f.startsWith("_"),
   );
   const pages: Page[] = [];
   for (const file of files) {
-    const slug = basename(file, ".md");
-    if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) throw new Error(`${file}: ファイル名は英小文字・数字・ハイフンのみ`);
+    const m = basename(file, ".md").match(/^([1-9][0-9]*)\.([a-z]+)$/);
+    if (!m || !(LANGS as readonly string[]).includes(m[2]))
+      throw new Error(`${file}: ファイル名は <連番>.<${LANGS.join("|")}>.md`);
     const { data, body } = parseFrontMatter(await readFile(join(PAGES_DIR, file), "utf8"));
     if (data.draft === "true") continue;
     if (!data.title) throw new Error(`${file}: front matter に title がない`);
     pages.push({
-      slug,
+      id: m[1],
+      lang: m[2] as Lang,
       title: data.title,
       description: data.description,
       date: data.date,
@@ -58,18 +68,39 @@ async function loadPages(): Promise<Page[]> {
       content: await marked.parse(body),
     });
   }
-  return pages.sort((a, b) => a.slug.localeCompare(b.slug));
+  return pages.sort(
+    (a, b) => a.id.localeCompare(b.id, "en", { numeric: true }) || LANGS.indexOf(a.lang) - LANGS.indexOf(b.lang),
+  );
 }
 
 function sitemap(pages: Page[], today: string): string {
   const urls = [{ loc: `${SITE}/`, lastmod: "2022-05-19" }].concat(
-    pages.map((p) => ({ loc: `${SITE}/${p.slug}/`, lastmod: p.updated || p.date || today })),
+    pages.map((p) => ({ loc: `${SITE}${pathOf(p)}`, lastmod: p.updated || p.date || today })),
   );
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n  </url>`).join("\n")}
 </urlset>
 `;
+}
+
+function alternates(siblings: Page[]): string {
+  if (siblings.length < 2) return "";
+  const links = siblings.map((s) => `<link rel="alternate" hreflang="${s.lang}" href="${SITE}${pathOf(s)}">`);
+  const def = siblings.find((s) => s.lang === DEFAULT_LANG);
+  if (def) links.push(`<link rel="alternate" hreflang="x-default" href="${SITE}${pathOf(def)}">`);
+  return links.join("\n  ");
+}
+
+function langSwitch(page: Page, siblings: Page[]): string {
+  if (siblings.length < 2) return "";
+  return siblings
+    .map((s) =>
+      s.lang === page.lang
+        ? `<span aria-current="page">${s.lang.toUpperCase()}</span>`
+        : `<a class="underline" href="${pathOf(s)}" hreflang="${s.lang}" lang="${s.lang}">${s.lang.toUpperCase()}</a>`,
+    )
+    .join(" / ");
 }
 
 const today = new Date().toISOString().slice(0, 10);
@@ -79,15 +110,20 @@ await cp(STATIC_DIR, OUT_DIR, { recursive: true });
 const layout = await readFile("layouts/page.html", "utf8");
 const pages = await loadPages();
 for (const p of pages) {
-  const dir = join(OUT_DIR, p.slug);
+  const siblings = pages.filter((s) => s.id === p.id);
+  const dir = join(OUT_DIR, pathOf(p));
   await mkdir(dir, { recursive: true });
   await writeFile(
     join(dir, "index.html"),
     render(layout, {
+      lang: p.lang,
+      id: p.id,
       title: p.title,
       description: p.description ?? "",
       date: p.date ?? "",
-      url: `${SITE}/${p.slug}/`,
+      url: `${SITE}${pathOf(p)}`,
+      alternates: alternates(siblings),
+      langSwitch: langSwitch(p, siblings),
       content: p.content,
     }),
   );
