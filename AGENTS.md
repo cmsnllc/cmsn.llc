@@ -11,17 +11,17 @@ docs/
   index.html    トップページ。CSS は <style> にインライン
   404.html      404 ページ
   sitemap.xml   サイトマップ
-netlify.toml    Netlify 設定。未定義パスを /404.html に流す
-README.md       Netlify デプロイステータスバッジのみ
+netlify.toml    旧 Netlify 設定。移行前の名残で現在は未使用
+README.md       旧 Netlify デプロイステータスバッジのみ
 ```
 
 ## デプロイ
 
-- Netlify と Cloudflare Pages の両方が連携している。本番がどちらかはリポジトリからは判別できない
-  - Netlify: サイト名 `cmsn`。README のバッジ参照
-  - Cloudflare Pages: プロジェクト名 `cmsn-llc`。PR ごとに `<branch>.cmsn-llc.pages.dev` へプレビューがデプロイされ、bot が PR にコメントする
-- `netlify.toml` に publish ディレクトリ指定はなく、各サービス側の設定で `docs/` を配信している想定
-- デフォルトブランチは `master`。push で自動デプロイされる
+- 本番は Cloudflare Pages。プロジェクト名 `cmsn-llc`。Netlify からは移行済み
+- 出力ディレクトリ `docs/` は Cloudflare 側の設定。リポジトリ内に CF の設定ファイルはない
+- デフォルトブランチ `master` への push で本番デプロイ
+- PR ごとに `<branch>.cmsn-llc.pages.dev` へプレビューがデプロイされ、bot が PR にコメントする
+- 404 は Cloudflare Pages が出力ディレクトリ直下の `404.html` を自動で返す
 
 ## ローカル確認
 
@@ -29,7 +29,7 @@ README.md       Netlify デプロイステータスバッジのみ
 python3 -m http.server -d docs 8000
 ```
 
-`http://localhost:8000` を開く。404 リダイレクトは Netlify 固有なのでローカルでは再現しない。
+`http://localhost:8000` を開く。
 
 ## 外部依存
 
@@ -56,3 +56,4 @@ python3 -m http.server -d docs 8000
 - `index.html` に `<!doctype html>`、`<html>`、`<meta charset>`、viewport meta がない
 - `<h1>SN</h2>` の閉じタグが不一致
 - `404.html` は `<h1>404</h1>` だけでスタイルなし
+- `netlify.toml` と README の Netlify バッジが残っている
