@@ -1,13 +1,12 @@
 {
-  "name": "cmsn-llc",
   "private": true,
-  "type": "module",
+  "packageManager": "pnpm@10.20.0",
   "scripts": {
-    "build": "node build.js",
     "dev": "wrangler dev",
-    "upload": "node scripts/upload.js"
+    "build": "pnpm --filter web build",
+    "upload": "pnpm --filter web upload"
   },
   "devDependencies": {
-    "marked": "18.1.0"
+    "wrangler": "4.151.1"
   }
 }

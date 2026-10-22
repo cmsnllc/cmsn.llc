@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { basename, extname } from "node:path";
+import { basename, extname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 
 const BUCKET = "cmsn-llc-media";
@@ -15,9 +15,10 @@ const TYPES = {
   ".mp4": "video/mp4",
 };
 
-const [file, key = basename(file ?? "")] = process.argv.slice(2);
+const [arg, key = basename(arg ?? "")] = process.argv.slice(2);
+const file = arg && resolve(process.env.INIT_CWD ?? process.cwd(), arg);
 if (!file || !existsSync(file)) {
-  console.error("usage: npm run upload -- <file> [key]");
+  console.error("usage: pnpm upload <file> [key]");
   process.exit(1);
 }
 if (!/^[A-Za-z0-9][A-Za-z0-9._\/-]*$/.test(key)) {
@@ -30,9 +31,13 @@ if (!type) {
   process.exit(1);
 }
 
-execFileSync(
-  "npx",
-  ["wrangler", "r2", "object", "put", `${BUCKET}/${key}`, "--file", file, "--content-type", type, "--remote"],
-  { stdio: "inherit" },
-);
+try {
+  execFileSync(
+    "pnpm",
+    ["exec", "wrangler", "r2", "object", "put", `${BUCKET}/${key}`, "--file", file, "--content-type", type, "--remote"],
+    { stdio: "inherit" },
+  );
+} catch (e) {
+  process.exit(e.status ?? 1);
+}
 console.log(`\n![](/media/${key})`);

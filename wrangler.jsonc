@@ -1,14 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cmsn-llc",
-  "main": "src/index.js",
+  "main": "packages/web/src/index.js",
   "compatibility_date": "2026-10-01",
   "build": {
-    "command": "npm run build",
-    "watch_dir": ["docs", "pages", "layouts", "build.js"]
+    "command": "pnpm build",
+    "watch_dir": ["packages/web/docs", "packages/web/pages", "packages/web/layouts", "packages/web/build.js"]
   },
   "assets": {
-    "directory": "./dist",
+    "directory": "./packages/web/dist",
     "not_found_handling": "404-page",
     "binding": "ASSETS",
     "run_worker_first": true

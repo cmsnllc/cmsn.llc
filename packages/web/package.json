@@ -1,0 +1,12 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "upload": "node scripts/upload.js"
+  },
+  "devDependencies": {
+    "marked": "18.1.0"
+  }
+}
