@@ -21,7 +21,3 @@ We run [Nok Audio](https://nok.audio), a brand that develops Eurorack synthesize
 ## Education
 
 We hold programming workshops at local schools, including junior high schools.
-
-## Environment and community
-
-As a Kawasaki SDGs Gold Partner and a member of the [30by30 Alliance](/en/p/1), we support efforts toward biodiversity conservation and a sustainable community.
