@@ -46,7 +46,9 @@ export function PixelMark({ label, className }: { label: string; className?: str
       const r = rand();
       if (letter >= 0) {
         const d = 4 + Math.floor(r * (STEPS - 5));
-        letters[letter].push(<rect key={`${x}-${y}`} className={`px-on px-d${d}`} x={x} y={y} />);
+        const g = Math.floor(rand() * 6);
+        const glitch = g < 3 ? ` px-g${g}` : "";
+        letters[letter].push(<rect key={`${x}-${y}`} className={`px-on px-d${d}${glitch}`} x={x} y={y} />);
       } else if (r < 0.22) {
         const d = Math.floor(rand() * (STEPS - 4));
         noise.push(<rect key={`${x}-${y}`} className={`px-noise px-d${d}`} x={x} y={y} />);

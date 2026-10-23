@@ -15,11 +15,33 @@
   65% { opacity: 1; }
 }
 
-@keyframes px-blink {
-  0% { opacity: 0.55; }
-  2% { opacity: 1; }
-  4% { opacity: 0.7; }
-  6%, 100% { opacity: 1; }
+@keyframes px-jitter {
+  0% { transform: translateX(2px); }
+  0.6% { transform: translateX(-1px); }
+  1.2% { transform: translateX(1px); }
+  1.8%, 100% { transform: none; }
+}
+
+@keyframes px-drop-0 {
+  0% { opacity: 0; }
+  0.8% { opacity: 1; }
+  1.4% { opacity: 0; }
+  2%, 100% { opacity: 1; }
+}
+
+@keyframes px-drop-1 {
+  0% { opacity: 1; }
+  0.5% { opacity: 0; }
+  1.1% { opacity: 1; }
+  1.7% { opacity: 0; }
+  2.2%, 100% { opacity: 1; }
+}
+
+@keyframes px-drop-2 {
+  0% { opacity: 0; }
+  0.4% { opacity: 1; }
+  1.6% { opacity: 0.3; }
+  2.1%, 100% { opacity: 1; }
 }
 
 @keyframes crt-flicker {
@@ -49,37 +71,42 @@
   .px-noise {
     width: 0.8px;
     height: 0.8px;
-    animation-duration: 0.6s;
-    animation-timing-function: step-end;
-    animation-fill-mode: both;
   }
-  .px-on { @apply fill-phosphor; animation-name: px-on; }
-  .px-noise { @apply fill-line; animation-name: px-noise; }
-  .px-d0 { animation-delay: 0s; }
-  .px-d1 { animation-delay: 0.125s; }
-  .px-d2 { animation-delay: 0.25s; }
-  .px-d3 { animation-delay: 0.375s; }
-  .px-d4 { animation-delay: 0.5s; }
-  .px-d5 { animation-delay: 0.625s; }
-  .px-d6 { animation-delay: 0.75s; }
-  .px-d7 { animation-delay: 0.875s; }
-  .px-d8 { animation-delay: 1s; }
-  .px-d9 { animation-delay: 1.125s; }
-  .px-d10 { animation-delay: 1.25s; }
-  .px-d11 { animation-delay: 1.375s; }
-  .px-d12 { animation-delay: 1.5s; }
-  .px-d13 { animation-delay: 1.625s; }
-  .px-d14 { animation-delay: 1.75s; }
-  .px-d15 { animation-delay: 1.875s; }
-  /* 収束後に文字ごとにずれた周期で軽く明滅させる。周期を互いに素に近くして揃いにくくする */
-  .px-letter { animation: px-blink 1s step-end 2.6s infinite; }
-  .px-letter-0 { animation-duration: 5.3s; animation-delay: 3.1s; }
-  .px-letter-1 { animation-duration: 7.9s; animation-delay: 4.4s; }
-  .px-letter-2 { animation-duration: 6.7s; animation-delay: 2.7s; }
-  .px-letter-3 { animation-duration: 8.9s; animation-delay: 5.6s; }
+  .px-on { @apply fill-phosphor; animation: px-on 0.6s step-end var(--px-d) both; }
+  .px-noise { @apply fill-line; animation: px-noise 0.6s step-end var(--px-d) both; }
+  .px-d0 { --px-d: 0s; }
+  .px-d1 { --px-d: 0.125s; }
+  .px-d2 { --px-d: 0.25s; }
+  .px-d3 { --px-d: 0.375s; }
+  .px-d4 { --px-d: 0.5s; }
+  .px-d5 { --px-d: 0.625s; }
+  .px-d6 { --px-d: 0.75s; }
+  .px-d7 { --px-d: 0.875s; }
+  .px-d8 { --px-d: 1s; }
+  .px-d9 { --px-d: 1.125s; }
+  .px-d10 { --px-d: 1.25s; }
+  .px-d11 { --px-d: 1.375s; }
+  .px-d12 { --px-d: 1.5s; }
+  .px-d13 { --px-d: 1.625s; }
+  .px-d14 { --px-d: 1.75s; }
+  .px-d15 { --px-d: 1.875s; }
+  /* 収束後のグリッチ。文字ごとに周期をずらし、一瞬だけ文字が横にぶれて一部のドットが欠ける */
+  .px-letter { animation: px-jitter var(--px-gt) step-end var(--px-gd) infinite; }
+  .px-letter-0 { --px-gt: 5.3s; --px-gd: 3.1s; }
+  .px-letter-1 { --px-gt: 7.9s; --px-gd: 4.4s; }
+  .px-letter-2 { --px-gt: 6.7s; --px-gd: 2.9s; }
+  .px-letter-3 { --px-gt: 8.9s; --px-gd: 5.6s; }
+  .px-on:is(.px-g0, .px-g1, .px-g2) {
+    animation:
+      px-on 0.6s step-end var(--px-d) both,
+      var(--px-drop) var(--px-gt) step-end var(--px-gd) infinite;
+  }
+  .px-g0 { --px-drop: px-drop-0; }
+  .px-g1 { --px-drop: px-drop-1; }
+  .px-g2 { --px-drop: px-drop-2; }
   @media (prefers-reduced-motion: reduce) {
     .px-letter { animation: none; }
-    .px-on { animation: none; }
+    .px-on, .px-on:is(.px-g0, .px-g1, .px-g2) { animation: none; }
     .px-noise { display: none; }
   }
 
