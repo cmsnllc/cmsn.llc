@@ -15,6 +15,14 @@
   65% { opacity: 1; }
 }
 
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  41% { opacity: 0.9; }
+  42% { opacity: 1; }
+  77% { opacity: 0.94; }
+  78% { opacity: 1; }
+}
+
 @keyframes px-noise {
   0% { opacity: 0; }
   15% { opacity: 1; }
@@ -32,17 +40,55 @@
 @layer components {
   .px-on,
   .px-noise {
-    width: 0.92px;
-    height: 0.92px;
+    width: 0.8px;
+    height: 0.8px;
     animation-duration: 0.6s;
     animation-timing-function: step-end;
     animation-fill-mode: both;
   }
   .px-on { @apply fill-phosphor; animation-name: px-on; }
   .px-noise { @apply fill-line; animation-name: px-noise; }
+  .px-d0 { animation-delay: 0s; }
+  .px-d1 { animation-delay: 0.125s; }
+  .px-d2 { animation-delay: 0.25s; }
+  .px-d3 { animation-delay: 0.375s; }
+  .px-d4 { animation-delay: 0.5s; }
+  .px-d5 { animation-delay: 0.625s; }
+  .px-d6 { animation-delay: 0.75s; }
+  .px-d7 { animation-delay: 0.875s; }
+  .px-d8 { animation-delay: 1s; }
+  .px-d9 { animation-delay: 1.125s; }
+  .px-d10 { animation-delay: 1.25s; }
+  .px-d11 { animation-delay: 1.375s; }
+  .px-d12 { animation-delay: 1.5s; }
+  .px-d13 { animation-delay: 1.625s; }
+  .px-d14 { animation-delay: 1.75s; }
+  .px-d15 { animation-delay: 1.875s; }
   @media (prefers-reduced-motion: reduce) {
     .px-on { animation: none; }
     .px-noise { display: none; }
+  }
+
+  /* 90 年代の CRT 風。走査線、周辺減光、蛍光体のにじみ、わずかなちらつき */
+  .crt {
+    @apply relative min-h-dvh overflow-hidden;
+    background: radial-gradient(ellipse at center, #031a03 0%, var(--color-bg) 75%);
+    & svg { filter: drop-shadow(0 0 2px var(--color-phosphor)) drop-shadow(0 0 12px color-mix(in srgb, var(--color-phosphor) 45%, transparent)); }
+    & a { text-shadow: 0 0 4px var(--color-phosphor), 0 0 14px color-mix(in srgb, var(--color-phosphor) 50%, transparent); }
+    &::before {
+      content: "";
+      @apply pointer-events-none absolute inset-0 z-10;
+      background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.45) 0 1px, transparent 1px 3px);
+    }
+    &::after {
+      content: "";
+      @apply pointer-events-none absolute inset-0 z-10;
+      background: radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.75) 100%);
+      animation: crt-flicker 4s steps(1) infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      &::after { animation: none; }
+    }
   }
 
   .prose-cm {

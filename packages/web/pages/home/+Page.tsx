@@ -4,7 +4,7 @@ import "../index.css";
 
 export default function Page() {
   return (
-    <div className="m-2 font-[serif] text-phosphor">
+    <div className="crt font-[serif] text-phosphor">
       <header className="flex justify-center px-4 pt-20 pb-16 sm:pt-32">
         <h1 className="m-0">
           <PixelMark label="CMSN" className="block w-[min(88vw,40rem)]" />

@@ -40,7 +40,7 @@ packages/web/
     _error/              404 と 500
   components/SiteFrame.tsx  個別ページ、固定ページ、404 の共通の枠。ヘッダに固定ページのナビ
   components/Sheet.tsx      paper 地のコンテナ。個別ページと固定ページで共用
-  components/PixelMark.tsx  トップの CMSN ワードマーク。SVG のドットがノイズから文字に収束する CSS アニメ。字形は Press Start 2P から写した
+  components/PixelMark.tsx  トップの CMSN ワードマーク。SVG のドットがノイズから文字に収束する CSS アニメ。字形は Press Start 2P から写し、1 マスを 3×3 の細かいドットに割っている。トップの CRT 風の見た目は index.css の .crt
   public/                そのまま配信する静的ファイル。ロゴ画像など
   scripts/upload.ts      画像を R2 に上げるスクリプト
   dist/                  ビルド出力。git 管理外

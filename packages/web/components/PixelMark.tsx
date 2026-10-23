@@ -31,24 +31,33 @@ function isLit(x: number, y: number): boolean {
   return GLYPHS[LINES[row][col]][cy][cx] === "#";
 }
 
+const SUB = 3;
+const STEPS = 16;
+
 export function PixelMark({ label, className }: { label: string; className?: string }) {
   const rand = rng(2018_11_01);
   const pixels = [];
-  for (let y = 0; y < SIZE; y++) {
-    for (let x = 0; x < SIZE; x++) {
-      const lit = isLit(x, y);
+  for (let y = 0; y < SIZE * SUB; y++) {
+    for (let x = 0; x < SIZE * SUB; x++) {
+      const lit = isLit(Math.floor(x / SUB), Math.floor(y / SUB));
       const r = rand();
       if (lit) {
-        const delay = (0.5 + r * 1.3).toFixed(2);
-        pixels.push(<rect key={`${x}-${y}`} className="px-on" x={x} y={y} style={{ animationDelay: `${delay}s` }} />);
-      } else if (r < 0.45) {
-        const delay = (rand() * 1.4).toFixed(2);
-        pixels.push(<rect key={`${x}-${y}`} className="px-noise" x={x} y={y} style={{ animationDelay: `${delay}s` }} />);
+        const d = 4 + Math.floor(r * (STEPS - 5));
+        pixels.push(<rect key={`${x}-${y}`} className={`px-on px-d${d}`} x={x} y={y} />);
+      } else if (r < 0.22) {
+        const d = Math.floor(rand() * (STEPS - 4));
+        pixels.push(<rect key={`${x}-${y}`} className={`px-noise px-d${d}`} x={x} y={y} />);
       }
     }
   }
   return (
-    <svg className={className} viewBox={`0 0 ${SIZE} ${SIZE}`} role="img" aria-label={label} shapeRendering="crispEdges">
+    <svg
+      className={className}
+      viewBox={`0 0 ${SIZE * SUB} ${SIZE * SUB}`}
+      role="img"
+      aria-label={label}
+      shapeRendering="crispEdges"
+    >
       {pixels}
     </svg>
   );
