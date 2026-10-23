@@ -15,6 +15,13 @@
   65% { opacity: 1; }
 }
 
+@keyframes px-blink {
+  0% { opacity: 0.55; }
+  2% { opacity: 1; }
+  4% { opacity: 0.7; }
+  6%, 100% { opacity: 1; }
+}
+
 @keyframes crt-flicker {
   0%, 100% { opacity: 1; }
   41% { opacity: 0.9; }
@@ -64,7 +71,14 @@
   .px-d13 { animation-delay: 1.625s; }
   .px-d14 { animation-delay: 1.75s; }
   .px-d15 { animation-delay: 1.875s; }
+  /* 収束後に文字ごとにずれた周期で軽く明滅させる。周期を互いに素に近くして揃いにくくする */
+  .px-letter { animation: px-blink 1s step-end 2.6s infinite; }
+  .px-letter-0 { animation-duration: 5.3s; animation-delay: 3.1s; }
+  .px-letter-1 { animation-duration: 7.9s; animation-delay: 4.4s; }
+  .px-letter-2 { animation-duration: 6.7s; animation-delay: 2.7s; }
+  .px-letter-3 { animation-duration: 8.9s; animation-delay: 5.6s; }
   @media (prefers-reduced-motion: reduce) {
+    .px-letter { animation: none; }
     .px-on { animation: none; }
     .px-noise { display: none; }
   }

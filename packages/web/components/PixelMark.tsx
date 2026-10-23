@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 const GLYPHS: Record<string, string[]> = {
   C: ["..####.", ".##..##", "##.....", "##.....", "##.....", ".##..##", "..####."],
   M: ["##...##", "###.###", "#######", "##.#.##", "##.#.##", "##...##", "##...##"],
@@ -19,16 +21,16 @@ function rng(seed: number): () => number {
   };
 }
 
-function isLit(x: number, y: number): boolean {
+function letterAt(x: number, y: number): number {
   const gx = x - MARGIN;
   const gy = y - MARGIN;
-  if (gx < 0 || gy < 0 || gx >= SIZE - MARGIN * 2 || gy >= SIZE - MARGIN * 2) return false;
+  if (gx < 0 || gy < 0 || gx >= SIZE - MARGIN * 2 || gy >= SIZE - MARGIN * 2) return -1;
   const col = Math.floor(gx / (GLYPH + GAP));
   const row = Math.floor(gy / (GLYPH + GAP));
   const cx = gx % (GLYPH + GAP);
   const cy = gy % (GLYPH + GAP);
-  if (cx >= GLYPH || cy >= GLYPH) return false;
-  return GLYPHS[LINES[row][col]][cy][cx] === "#";
+  if (cx >= GLYPH || cy >= GLYPH) return -1;
+  return GLYPHS[LINES[row][col]][cy][cx] === "#" ? row * LINES[0].length + col : -1;
 }
 
 const SUB = 3;
@@ -36,17 +38,18 @@ const STEPS = 16;
 
 export function PixelMark({ label, className }: { label: string; className?: string }) {
   const rand = rng(2018_11_01);
-  const pixels = [];
+  const noise = [];
+  const letters: ReactElement[][] = LINES.join("").split("").map(() => []);
   for (let y = 0; y < SIZE * SUB; y++) {
     for (let x = 0; x < SIZE * SUB; x++) {
-      const lit = isLit(Math.floor(x / SUB), Math.floor(y / SUB));
+      const letter = letterAt(Math.floor(x / SUB), Math.floor(y / SUB));
       const r = rand();
-      if (lit) {
+      if (letter >= 0) {
         const d = 4 + Math.floor(r * (STEPS - 5));
-        pixels.push(<rect key={`${x}-${y}`} className={`px-on px-d${d}`} x={x} y={y} />);
+        letters[letter].push(<rect key={`${x}-${y}`} className={`px-on px-d${d}`} x={x} y={y} />);
       } else if (r < 0.22) {
         const d = Math.floor(rand() * (STEPS - 4));
-        pixels.push(<rect key={`${x}-${y}`} className={`px-noise px-d${d}`} x={x} y={y} />);
+        noise.push(<rect key={`${x}-${y}`} className={`px-noise px-d${d}`} x={x} y={y} />);
       }
     }
   }
@@ -58,7 +61,12 @@ export function PixelMark({ label, className }: { label: string; className?: str
       aria-label={label}
       shapeRendering="crispEdges"
     >
-      {pixels}
+      {noise}
+      {letters.map((rects, i) => (
+        <g key={i} className={`px-letter px-letter-${i}`}>
+          {rects}
+        </g>
+      ))}
     </svg>
   );
 }
