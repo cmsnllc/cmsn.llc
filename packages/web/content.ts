@@ -116,7 +116,7 @@ export const findFixed = (slug: string, lang: Lang): FixedPage | undefined =>
 export const fixedSiblingsOf = (slug: FixedSlug): FixedPage[] =>
   LANGS.map((lang) => findFixed(slug, lang)).filter((p) => p !== undefined);
 
-export const NEWS_TITLE: Record<Lang, string> = { ja: "ニュース", en: "News" };
+export const NEWS_TITLE: Record<Lang, string> = { ja: "お知らせ", en: "News" };
 export const NEWS_DESCRIPTION: Record<Lang, string> = {
   ja: "カミング・スーン合同会社からのお知らせです。",
   en: "News from Coming Soon LLC.",
