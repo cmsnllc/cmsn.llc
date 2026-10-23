@@ -30,13 +30,13 @@ packages/web/
   content/
     <id>.<lang>.md       個別ページの原稿。lang は ja か en
     _template.md         雛形。_ 始まりは読み込まない
-    fixed/<slug>.<lang>.md  固定ページの原稿。slug は about、history、contact
+    fixed/<slug>.<lang>.md  固定ページの原稿。slug は about、business、history、contact
   pages/
     +config.ts           全ページ共通の Vike 設定
     index.css            Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
     home/                トップページ /。PixelMark と固定ページへのナビだけ
     article/             個別ページ /p/@id と /en/p/@id。+route.ts で両方を受ける
-    fixed/               固定ページ /about、/history、/contact と /en 付き
+    fixed/               固定ページ /about、/business、/history、/contact と /en 付き
     _error/              404 と 500
   components/SiteFrame.tsx  個別ページ、固定ページ、404 の共通の枠。ヘッダに固定ページのナビ
   components/Sheet.tsx      paper 地のコンテナ。個別ページと固定ページで共用
@@ -67,7 +67,7 @@ README.md                最小限の説明
 
 ## 固定ページ
 
-会社概要 `/about`、沿革 `/history`、お問い合わせ `/contact` は `packages/web/content/fixed/<slug>.<lang>.md` に書く。英語は `/en/<slug>`。front matter は `title` が必須で、`description` と `updated` は任意。`hideTitle: true` で本文の見出しを画面から隠す。埋め込みフォームに見出しがあるお問い合わせで使っている。`title` はヘッダとトップのナビの文言にもなる。会社情報や沿革は `<dl>` で書くと `.prose-cm` で 2 列に並ぶ。
+会社概要 `/about`、事業内容 `/business`、沿革 `/history`、お問い合わせ `/contact` は `packages/web/content/fixed/<slug>.<lang>.md` に書く。英語は `/en/<slug>`。front matter は `title` が必須で、`description` と `updated` は任意。`hideTitle: true` で本文の見出しを画面から隠す。埋め込みフォームに見出しがあるお問い合わせで使っている。`title` はヘッダとトップのナビの文言にもなる。会社情報や沿革は `<dl>` で書くと `.prose-cm` で 2 列に並ぶ。
 
 固定ページを増やす時は `content.ts` の `FIXED_SLUGS` と `pages/fixed/+route.ts` の正規表現の両方に slug を足す。`+route.ts` は Vike の設定読み込み時にも動くので `content.ts` を import できない。
 

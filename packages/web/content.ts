@@ -67,7 +67,7 @@ export const siblingsOf = (id: string): Article[] => articles.filter((a) => a.id
 
 export const renderBody = (a: Pick<Article, "body">): string => marked.parse(a.body, { async: false });
 
-export const FIXED_SLUGS = ["about", "history", "contact"] as const;
+export const FIXED_SLUGS = ["about", "business", "history", "contact"] as const;
 export type FixedSlug = (typeof FIXED_SLUGS)[number];
 
 export interface FixedPage {
