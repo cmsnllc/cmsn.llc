@@ -12,6 +12,7 @@ export function data(pageContext: PageContextServer) {
     slug: page.slug,
     lang,
     title: page.title,
+    hideTitle: page.hideTitle,
     description: page.description ?? "",
     url: `${SITE}${fixedPathOf(page)}`,
     html: renderBody(page),

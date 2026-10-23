@@ -76,6 +76,7 @@ export interface FixedPage {
   title: string;
   description?: string;
   updated?: string;
+  hideTitle: boolean;
   body: string;
 }
 
@@ -94,6 +95,7 @@ function loadFixed(): FixedPage[] {
       title: data.title,
       description: data.description,
       updated: data.updated,
+      hideTitle: data.hideTitle === "true",
       body,
     });
   }

@@ -12,6 +12,7 @@ export function Sheet({
   siblings,
   date,
   title,
+  hideTitle = false,
   children,
 }: {
   label: string;
@@ -19,6 +20,7 @@ export function Sheet({
   siblings: Sibling[];
   date?: string;
   title: string;
+  hideTitle?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -46,7 +48,7 @@ export function Sheet({
         </span>
       </div>
       <div className="px-5 pt-8 pb-10 sm:px-10 sm:pt-12 sm:pb-14">
-        <h1 className="mb-8 text-[clamp(1.5rem,5vw,2rem)] leading-snug font-bold wrap-anywhere">{title}</h1>
+        <h1 className={hideTitle ? "sr-only" : "mb-8 text-[clamp(1.5rem,5vw,2rem)] leading-snug font-bold wrap-anywhere"}>{title}</h1>
         {children}
       </div>
     </article>

@@ -66,7 +66,7 @@ README.md                最小限の説明
 
 ## 固定ページ
 
-会社概要 `/about`、沿革 `/history`、お問い合わせ `/contact` は `packages/web/content/fixed/<slug>.<lang>.md` に書く。英語は `/en/<slug>`。front matter は `title` が必須で、`description` と `updated` は任意。`title` はヘッダとトップのナビの文言にもなる。会社情報や沿革は `<dl>` で書くと `.prose-cm` で 2 列に並ぶ。
+会社概要 `/about`、沿革 `/history`、お問い合わせ `/contact` は `packages/web/content/fixed/<slug>.<lang>.md` に書く。英語は `/en/<slug>`。front matter は `title` が必須で、`description` と `updated` は任意。`hideTitle: true` で本文の見出しを画面から隠す。埋め込みフォームに見出しがあるお問い合わせで使っている。`title` はヘッダとトップのナビの文言にもなる。会社情報や沿革は `<dl>` で書くと `.prose-cm` で 2 列に並ぶ。
 
 固定ページを増やす時は `content.ts` の `FIXED_SLUGS` と `pages/fixed/+route.ts` の正規表現の両方に slug を足す。`+route.ts` は Vike の設定読み込み時にも動くので `content.ts` を import できない。
 

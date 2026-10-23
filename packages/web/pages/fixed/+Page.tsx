@@ -4,10 +4,10 @@ import { SiteFrame } from "../../components/SiteFrame";
 import type { Data } from "./+data";
 
 export default function Page() {
-  const { slug, lang, title, html, siblings } = useData<Data>();
+  const { slug, lang, title, hideTitle, html, siblings } = useData<Data>();
   return (
     <SiteFrame lang={lang}>
-      <Sheet label={slug.toUpperCase()} lang={lang} siblings={siblings} title={title}>
+      <Sheet label={slug.toUpperCase()} lang={lang} siblings={siblings} title={title} hideTitle={hideTitle}>
         <div className="prose-cm" dangerouslySetInnerHTML={{ __html: html }} />
       </Sheet>
     </SiteFrame>
