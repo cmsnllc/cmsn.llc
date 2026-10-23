@@ -188,8 +188,8 @@
   .px-d15 { --px-d: 1.875s; }
   /* 収束後のグリッチ。文字ごとに周期をずらし、一瞬だけ文字がぶれて一部のドットが欠ける。ぶれ方と欠け方は文字ごとに別 */
   .px-letter { animation: var(--px-jitter) var(--px-gt) step-end var(--px-gd) infinite; }
-  .px-letter-0 { --px-gt: 14.3s; --px-gd: 4.2s; --px-jitter: px-jitter-0; --px-drop-0: px-drop-0-0; --px-drop-1: px-drop-0-1; --px-drop-2: px-drop-0-2; }
-  .px-letter-1 { --px-gt: 21.7s; --px-gd: 9.6s; --px-jitter: px-jitter-1; --px-drop-0: px-drop-1-0; --px-drop-1: px-drop-1-1; --px-drop-2: px-drop-1-2; }
+  .px-letter-0 { --px-gt: 14.3s; --px-gd: 9.6s; --px-jitter: px-jitter-0; --px-drop-0: px-drop-0-0; --px-drop-1: px-drop-0-1; --px-drop-2: px-drop-0-2; }
+  .px-letter-1 { --px-gt: 21.7s; --px-gd: 4.2s; --px-jitter: px-jitter-1; --px-drop-0: px-drop-1-0; --px-drop-1: px-drop-1-1; --px-drop-2: px-drop-1-2; }
   .px-letter-2 { --px-gt: 17.9s; --px-gd: 6.8s; --px-jitter: px-jitter-2; --px-drop-0: px-drop-2-0; --px-drop-1: px-drop-2-1; --px-drop-2: px-drop-2-2; }
   .px-letter-3 { --px-gt: 25.3s; --px-gd: 13.1s; --px-jitter: px-jitter-3; --px-drop-0: px-drop-3-0; --px-drop-1: px-drop-3-1; --px-drop-2: px-drop-3-2; }
   .px-on:is(.px-g0, .px-g1, .px-g2) {
