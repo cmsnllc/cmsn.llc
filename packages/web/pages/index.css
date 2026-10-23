@@ -8,6 +8,21 @@
 @source "../pages";
 @source "../components";
 
+@keyframes px-on {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  45% { opacity: 0; }
+  65% { opacity: 1; }
+}
+
+@keyframes px-noise {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  40% { opacity: 0; }
+  60% { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+
 @layer base {
   body { @apply bg-bg; }
   a:focus-visible { @apply outline-2 outline-offset-2 outline-phosphor; }
@@ -15,6 +30,21 @@
 }
 
 @layer components {
+  .px-on,
+  .px-noise {
+    width: 0.92px;
+    height: 0.92px;
+    animation-duration: 0.6s;
+    animation-timing-function: step-end;
+    animation-fill-mode: both;
+  }
+  .px-on { @apply fill-phosphor; animation-name: px-on; }
+  .px-noise { @apply fill-line; animation-name: px-noise; }
+  @media (prefers-reduced-motion: reduce) {
+    .px-on { animation: none; }
+    .px-noise { display: none; }
+  }
+
   .prose-cm {
     & :first-child { @apply mt-0; }
     & h2 { @apply mt-12 mb-4 text-2xl leading-snug font-bold; }

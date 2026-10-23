@@ -34,12 +34,13 @@ packages/web/
   pages/
     +config.ts           全ページ共通の Vike 設定
     index.css            Tailwind の入力。theme を読み、Markdown 本文用の .prose-cm もここ
-    home/                トップページ /。ワードマークと固定ページへのナビだけ
+    home/                トップページ /。PixelMark と固定ページへのナビだけ
     article/             個別ページ /p/@id と /en/p/@id。+route.ts で両方を受ける
     fixed/               固定ページ /about、/history、/contact と /en 付き
     _error/              404 と 500
   components/SiteFrame.tsx  個別ページ、固定ページ、404 の共通の枠。ヘッダに固定ページのナビ
   components/Sheet.tsx      paper 地のコンテナ。個別ページと固定ページで共用
+  components/PixelMark.tsx  トップの CMSN ワードマーク。SVG のドットがノイズから文字に収束する CSS アニメ。字形は Press Start 2P から写した
   public/                そのまま配信する静的ファイル。ロゴ画像など
   scripts/upload.ts      画像を R2 に上げるスクリプト
   dist/                  ビルド出力。git 管理外
