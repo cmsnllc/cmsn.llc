@@ -10,7 +10,7 @@ updated: 2026-10-23
   <dt>Mar 2023</dt>
   <dd>Certified as a Kawasaki SDGs Gold Partner by Kawasaki City</dd>
   <dt>Oct 2023</dt>
-  <dd>Launched new web pages for Showa Kindergarten</dd>
+  <dd>Launched new web pages for <a href="https://showa-you.com">Showa Kindergarten</a></dd>
   <dt>Nov 2024</dt>
   <dd>Held a programming workshop at Nishi-Takatsu Junior High School, Kawasaki</dd>
   <dt>Jan 2025</dt>
@@ -18,7 +18,7 @@ updated: 2026-10-23
   <dt>Nov 2025</dt>
   <dd>Held a programming workshop at Nishi-Takatsu Junior High School, Kawasaki</dd>
   <dt>Jun 2026</dt>
-  <dd>Published a gallery page for Akira Nagaoka</dd>
+  <dd>Published a <a href="https://showa-you.com/gallery">gallery page</a> for Akira Nagaoka</dd>
   <dt>Oct 2026</dt>
   <dd><a href="/en/p/1">Joined the 30by30 Alliance</a> led by the Ministry of the Environment of Japan</dd>
   <dt>Nov 2026</dt>
