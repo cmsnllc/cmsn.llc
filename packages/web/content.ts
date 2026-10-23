@@ -116,7 +116,31 @@ export const findFixed = (slug: string, lang: Lang): FixedPage | undefined =>
 export const fixedSiblingsOf = (slug: FixedSlug): FixedPage[] =>
   LANGS.map((lang) => findFixed(slug, lang)).filter((p) => p !== undefined);
 
-export const navOf = (lang: Lang): { slug: FixedSlug; title: string; path: string }[] =>
-  FIXED_SLUGS.map((slug) => findFixed(slug, lang) ?? findFixed(slug, DEFAULT_LANG))
-    .filter((p) => p !== undefined)
-    .map((p) => ({ slug: p.slug, title: p.title, path: fixedPathOf(p) }));
+export const NEWS_TITLE: Record<Lang, string> = { ja: "ニュース", en: "News" };
+export const NEWS_DESCRIPTION: Record<Lang, string> = {
+  ja: "カミング・スーン合同会社からのお知らせです。",
+  en: "News from Coming Soon LLC.",
+};
+
+export const newsPathOf = (lang: Lang): string => `${langPrefix(lang)}/news`;
+
+export const newsOf = (lang: Lang): Article[] =>
+  articles
+    .filter((a) => a.lang === lang)
+    .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? "") || b.id.localeCompare(a.id, "en", { numeric: true }));
+
+export const newsLastmod = (lang: Lang): string | undefined =>
+  newsOf(lang)
+    .map((a) => a.updated || a.date)
+    .filter((d) => d !== undefined)
+    .sort()
+    .at(-1);
+
+const NAV_ORDER = ["about", "business", "history", "news", "contact"] as const;
+
+export const navOf = (lang: Lang): { slug: (typeof NAV_ORDER)[number]; title: string; path: string }[] =>
+  NAV_ORDER.map((slug) => {
+    if (slug === "news") return { slug, title: NEWS_TITLE[lang], path: newsPathOf(lang) };
+    const p = findFixed(slug, lang) ?? findFixed(slug, DEFAULT_LANG);
+    return p && { slug, title: p.title, path: fixedPathOf(p) };
+  }).filter((n) => n !== undefined);
