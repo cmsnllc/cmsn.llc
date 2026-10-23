@@ -14,13 +14,13 @@ updated: 2026-10-23
   <dt>Nov 2024</dt>
   <dd>Held a programming workshop at Nishi-Takatsu Junior High School, Kawasaki</dd>
   <dt>Jan 2025</dt>
-  <dd>Launched Nok Audio</dd>
+  <dd>Launched <a href="https://nok.audio">Nok Audio</a></dd>
   <dt>Nov 2025</dt>
-  <dd>Held the second programming workshop at Nishi-Takatsu Junior High School</dd>
+  <dd>Held a programming workshop at Nishi-Takatsu Junior High School, Kawasaki</dd>
   <dt>Jun 2026</dt>
   <dd>Published a gallery page for Akira Nagaoka</dd>
   <dt>Oct 2026</dt>
   <dd><a href="/en/p/1">Joined the 30by30 Alliance</a> led by the Ministry of the Environment of Japan</dd>
   <dt>Nov 2026</dt>
-  <dd>Third programming workshop at Nishi-Takatsu Junior High School is scheduled</dd>
+  <dd>A programming workshop at Nishi-Takatsu Junior High School, Kawasaki, is scheduled</dd>
 </dl>
